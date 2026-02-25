@@ -1,16 +1,16 @@
 package com.quantity_measurement_app;
 
 import java.util.Objects;
-//UC1 - feet measurement equality
 public class QualntityMeasurementApp {
 
+	//UC1 - feet measurement equality
 	//inner class representing Feet measurement
 	public static class Feet {
 		private final double value;
 
 		//constructor
 		public Feet(double value) {
-			this.value = value;
+			this.value=value;
 		}
 
 		//equals method
@@ -33,26 +33,52 @@ public class QualntityMeasurementApp {
 			return Objects.hash(value);
 		}
 	}
+	
+	public static void demonstrateFeetEquality(double v1, double v2) {
+        Feet f1=new Feet(v1);
+        Feet f2=new Feet(v2);
+        System.out.println("Input: " + v1 + " ft and " + v2 + " ft");
+        System.out.println("Output: Equal ("+f1.equals(f2)+")");
+        System.out.println();
+    }
+	
+	//UC2 - inch measurement equality
+	//inner class representing Inches measurement
+    public static class Inches {
+        private final double value;
+
+        public Inches(double value) {
+            this.value=value;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (this.getClass() != obj.getClass()) return false;
+
+            Inches other = (Inches) obj;
+            return Double.compare(this.value, other.value) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
+        }
+    }
+    
+    public static void demonstrateInchesEquality(double v1, double v2) {
+        Inches i1=new Inches(v1);
+        Inches i2=new Inches(v2);
+        System.out.println("Input: " +v1+ " inch and " +v2+ " inch");
+        System.out.println("Output: Equal ("+i1.equals(i2)+")");
+        System.out.println();
+    }
 
 	public static void main(String[] args) {
-		Feet feet1=new Feet(1.0);
-		Feet feet2=new Feet(1.0);
-		Feet feet3=new Feet(2.0);
-
-		System.out.println("Input: 1.0 ft and 1.0 ft");
-        System.out.println("Output: Equal ("+feet1.equals(feet2)+")");
-        System.out.println();
-
-        System.out.println("Input: 1.0 ft and 2.0 ft");
-        System.out.println("Output: Equal ("+feet1.equals(feet3)+")");
-        System.out.println();
-
-        System.out.println("Input: 1.0 ft and null");
-        System.out.println("Output: Equal ("+feet1.equals(null)+")");
-        System.out.println();
-
-        System.out.println("Input: 1.0 ft and same reference");
-        System.out.println("Output: Equal ("+feet1.equals(feet1)+")");
-        System.out.println();
+		demonstrateFeetEquality(1.0, 1.0);
+		demonstrateFeetEquality(1.0, 2.0);
+        demonstrateInchesEquality(1.0, 1.0);
+        demonstrateInchesEquality(1.0, 2.0);
 	}
 }
