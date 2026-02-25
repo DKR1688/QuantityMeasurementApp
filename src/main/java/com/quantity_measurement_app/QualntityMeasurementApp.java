@@ -1,7 +1,5 @@
 package com.quantity_measurement_app;
 
-import java.util.Objects;
-
 public class QualntityMeasurementApp {
 
 //	//UC1 - feet measurement equality
@@ -96,11 +94,29 @@ public class QualntityMeasurementApp {
 		System.out.println();
 	}
 
+	// UC4 - method to yard comparison
+	public static void demonstrateYardComparison(double v1, Length.LengthUnit u1, double v2, Length.LengthUnit u2) {
+		Length l1 = new Length(v1, u1);
+		Length l2 = new Length(v2, u2);
+
+		System.out.println("Input: " + l1 + " and " + l2);
+		System.out.println("Output: Equal (" + l1.equals(l2) + ")");
+		System.out.println();
+	}
+
 	public static void main(String[] args) {
+
 		demonstrateFeetEquality(1.0, 1.0);
 		demonstrateFeetEquality(1.0, 2.0);
+
 		demonstrateInchesEquality(1.0, 1.0);
 		demonstrateInchesEquality(1.0, 2.0);
+
 		demonstrateFeetInchesComparison(1.0, 12.0);
+
+		demonstrateYardComparison(1.0, Length.LengthUnit.YARDS, 3.0, Length.LengthUnit.FEET);
+		demonstrateYardComparison(1.0, Length.LengthUnit.YARDS, 36.0, Length.LengthUnit.INCHES);
+		demonstrateYardComparison(1.0, Length.LengthUnit.CENTIMETERS, 0.393701, Length.LengthUnit.INCHES);
+		demonstrateYardComparison(2.0, Length.LengthUnit.YARDS, 72.0, Length.LengthUnit.INCHES);
 	}
 }

@@ -3,12 +3,17 @@ package com.quantity_measurement_app;
 import java.util.Objects;
 
 public class Length {
+
 	private final double value;
 	private final LengthUnit unit;
 
-	// enum for units (base unit=inches)
+	// enum for units (base unit = INCHES)
 	public enum LengthUnit {
-		FEET(12.0), INCHES(1.0);
+
+		INCHES(1.0), // Base unit
+		FEET(12.0), // 1 foot = 12 inches
+		YARDS(36.0), // 1 yard = 36 inches
+		CENTIMETERS(0.393701); // 1 cm = 0.393701 inches
 
 		private final double conversionFactor;
 
@@ -22,6 +27,9 @@ public class Length {
 	}
 
 	public Length(double value, LengthUnit unit) {
+		if (unit == null) {
+			throw new IllegalArgumentException("Unit cannot be null");
+		}
 		this.value = value;
 		this.unit = unit;
 	}
@@ -36,12 +44,12 @@ public class Length {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
+
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		}
+
 		Length other = (Length) obj;
 		return this.compare(other);
 	}
@@ -49,5 +57,10 @@ public class Length {
 	@Override
 	public int hashCode() {
 		return Objects.hash(convertToBaseUnit());
+	}
+
+	@Override
+	public String toString() {
+		return "Quantity(" + value + ", " + unit + ")";
 	}
 }
