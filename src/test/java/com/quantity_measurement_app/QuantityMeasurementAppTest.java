@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 class QuantityMeasurementAppTest {
 
-	//UC1 ---
+	//UC1 --- feet measurement
 	@Test
 	void testEquality_SameValue() {
 		QualntityMeasurementApp.Feet feet1=new QualntityMeasurementApp.Feet(1.0);
@@ -38,7 +38,7 @@ class QuantityMeasurementAppTest {
 		assertFalse(feet1.equals(nonNumeric), "Feet object should not equal non-numeric input");
 	}
 	
-	//UC2 ---
+	//UC2 --- Inch measurement
 	@Test
     void testInchesEquality_SameValue() {
 		QualntityMeasurementApp.Inches i1=new QualntityMeasurementApp.Inches(1.0);
