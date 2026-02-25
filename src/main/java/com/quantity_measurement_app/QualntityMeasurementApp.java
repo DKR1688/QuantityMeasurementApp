@@ -104,8 +104,29 @@ public class QualntityMeasurementApp {
 		System.out.println();
 	}
 
-	public static void main(String[] args) {
+	// UC5 ---
+	// method to raw values
+	public static void demonstrateLengthConversion(double value, Length.LengthUnit from, Length.LengthUnit to) {
 
+		double result = Length.convert(value, from, to);
+
+		System.out.println("Input: convert(" + value + ", " + from + ", " + to + ")");
+		System.out.println("Output: " + result);
+		System.out.println();
+	}
+
+	// method to existing Length object
+	public static void demonstrateLengthConversion(Length length, Length.LengthUnit to) {
+
+		Length converted = length.convertTo(to);
+
+		System.out.println("Input: " + length);
+		System.out.println("Converted to " + to + ": " + converted.getValue());
+		System.out.println();
+	}
+
+	public static void main(String[] args) {
+		// examples
 		demonstrateFeetEquality(1.0, 1.0);
 		demonstrateFeetEquality(1.0, 2.0);
 
@@ -118,5 +139,15 @@ public class QualntityMeasurementApp {
 		demonstrateYardComparison(1.0, Length.LengthUnit.YARDS, 36.0, Length.LengthUnit.INCHES);
 		demonstrateYardComparison(1.0, Length.LengthUnit.CENTIMETERS, 0.393701, Length.LengthUnit.INCHES);
 		demonstrateYardComparison(2.0, Length.LengthUnit.YARDS, 72.0, Length.LengthUnit.INCHES);
+
+		// UC5 ---
+		demonstrateLengthConversion(1.0, Length.LengthUnit.FEET, Length.LengthUnit.INCHES);
+		demonstrateLengthConversion(3.0, Length.LengthUnit.YARDS, Length.LengthUnit.FEET);
+		demonstrateLengthConversion(36.0, Length.LengthUnit.INCHES, Length.LengthUnit.YARDS);
+		demonstrateLengthConversion(1.0, Length.LengthUnit.CENTIMETERS, Length.LengthUnit.INCHES);
+		demonstrateLengthConversion(0.0, Length.LengthUnit.FEET, Length.LengthUnit.INCHES);
+
+		Length yard = new Length(1.0, Length.LengthUnit.YARDS);
+		demonstrateLengthConversion(yard, Length.LengthUnit.INCHES);
 	}
 }
