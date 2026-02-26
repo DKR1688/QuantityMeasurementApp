@@ -323,4 +323,106 @@ class QuantityMeasurementAppTest {
 		assertEquals(0.003, result.getValue(), EPSILON);
 	}
 
+	// UC7 --- addition tests with targets
+	@Test
+	void testAddition_ExplicitTargetUnit_Feet() {
+		Length result = Length.add(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.FEET);
+		assertEquals(new Length(2.0, Length.LengthUnit.FEET), result);
+	}
+
+	@Test
+	void testAddition_ExplicitTargetUnit_Inches() {
+		Length result = Length.add(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.INCHES);
+		assertEquals(new Length(24.0, Length.LengthUnit.INCHES), result);
+	}
+
+	@Test
+	void testAddition_ExplicitTargetUnit_Yards() {
+		Length result = Length.add(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.YARDS);
+		assertEquals(new Length(0.6667, Length.LengthUnit.YARDS), result);
+	}
+
+	@Test
+	void testAddition_ExplicitTargetUnit_Centimeters() {
+		Length result = Length.add(new Length(1.0, Length.LengthUnit.INCHES), new Length(1.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.CENTIMETERS);
+		assertEquals(new Length(5.08, Length.LengthUnit.CENTIMETERS), result);
+	}
+
+	// target same as first and second operand
+	@Test
+	void testAddition_ExplicitTargetUnit_SameAsFirstOperand() {
+		Length result = Length.add(new Length(2.0, Length.LengthUnit.YARDS), new Length(3.0, Length.LengthUnit.FEET),
+				Length.LengthUnit.YARDS);
+		assertEquals(new Length(3.0, Length.LengthUnit.YARDS), result);
+	}
+
+	@Test
+	void testAddition_ExplicitTargetUnit_SameAsSecondOperand() {
+		Length result = Length.add(new Length(2.0, Length.LengthUnit.YARDS), new Length(3.0, Length.LengthUnit.FEET),
+				Length.LengthUnit.FEET);
+		assertEquals(new Length(9.0, Length.LengthUnit.FEET), result);
+	}
+
+	// commutativity
+	@Test
+	void testAddition_ExplicitTargetUnit_Commutativity() {
+		Length result1 = Length.add(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.YARDS);
+
+		Length result2 = Length.add(new Length(12.0, Length.LengthUnit.INCHES), new Length(1.0, Length.LengthUnit.FEET),
+				Length.LengthUnit.YARDS);
+		assertEquals(result1, result2);
+	}
+
+	// zero value case
+	@Test
+	void testAddition_ExplicitTargetUnit_WithZero() {
+		Length result = Length.add(new Length(5.0, Length.LengthUnit.FEET), new Length(0.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.YARDS);
+		assertEquals(new Length(1.6667, Length.LengthUnit.YARDS), result);
+	}
+
+	// negative value case
+	@Test
+	void testAddition_ExplicitTargetUnit_NegativeValues() {
+		Length result = Length.add(new Length(5.0, Length.LengthUnit.FEET), new Length(-2.0, Length.LengthUnit.FEET),
+				Length.LengthUnit.INCHES);
+		assertEquals(new Length(36.0, Length.LengthUnit.INCHES), result);
+	}
+
+	// null target unit
+	@Test
+	void testAddition_ExplicitTargetUnit_NullTargetUnit() {
+		assertThrows(IllegalArgumentException.class, () -> Length.add(new Length(1.0, Length.LengthUnit.FEET),
+				new Length(12.0, Length.LengthUnit.INCHES), null));
+	}
+
+	// large to small scale and small to large scale
+	@Test
+	void testAddition_ExplicitTargetUnit_LargeToSmallScale() {
+		Length result = Length.add(new Length(1000.0, Length.LengthUnit.FEET),
+				new Length(500.0, Length.LengthUnit.FEET), Length.LengthUnit.INCHES);
+		assertEquals(new Length(18000.0, Length.LengthUnit.INCHES), result);
+	}
+
+	@Test
+	void testAddition_ExplicitTargetUnit_SmallToLargeScale() {
+		Length result = Length.add(new Length(12.0, Length.LengthUnit.INCHES),
+				new Length(12.0, Length.LengthUnit.INCHES), Length.LengthUnit.YARDS);
+		assertEquals(new Length(0.6667, Length.LengthUnit.YARDS), result);
+	}
+
+	// precision tolerance check
+	@Test
+	void testAddition_ExplicitTargetUnit_PrecisionTolerance() {
+		Length result = Length.add(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES),
+				Length.LengthUnit.YARDS);
+		Length expected = new Length(0.666666, Length.LengthUnit.YARDS);
+		assertEquals(expected, result);
+	}
+
 }

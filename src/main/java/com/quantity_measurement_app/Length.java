@@ -109,6 +109,26 @@ public class Length {
 		return new Length(v1, u1).add(new Length(v2, u2));
 	}
 
+	// UC7 --- addition with target
+	public static Length add(Length l1, Length l2, LengthUnit targetUnit) {
+
+		if (l1 == null || l2 == null) {
+			throw new IllegalArgumentException("Lengths cannot be null");
+		}
+
+		if (targetUnit == null) {
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
+
+		// Convert both to base (INCHES)
+		double baseSum = l1.convertToBaseUnit() + l2.convertToBaseUnit();
+
+		// Convert base sum to target unit
+		double resultValue = baseSum / targetUnit.getConversionFactor();
+
+		return new Length(resultValue, targetUnit);
+	}
+
 	// equality
 	public boolean compare(Length other) {
 		if (other == null)
