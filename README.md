@@ -31,4 +31,6 @@ QuantityMeasurementApp/
 ## 🚀 Week 02
 > **🗓️ 25-February-2026 :-** refactored structures of UC1 to UC5 branch to make correct structure flow by creating new branches; Refactred and pushed all UC1 to UC5 branches [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/branches);
 
-> **🗓️ 26-February-2026 :-** 
+> **🗓️ 26-February-2026 :-** Solved and submitted UC6 to unit addition feature [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC6-UnitAddition/src), UC7 to target unit addition feature [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC7-TargetUnitAddition/src) and UC8 to standalone length unit enum by loose coupling completed [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC8-StandaloneUnit/src);
+
+> **🗓️ 27-February-2026 :-** 
