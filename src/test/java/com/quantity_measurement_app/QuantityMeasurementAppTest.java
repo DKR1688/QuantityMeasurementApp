@@ -234,12 +234,93 @@ class QuantityMeasurementAppTest {
 	// invalid Value Handling
 	@Test
 	void testConversion_NaN_Throws() {
-		assertThrows(IllegalArgumentException.class, () -> Length.convert(Double.NaN, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
+		assertThrows(IllegalArgumentException.class,
+				() -> Length.convert(Double.NaN, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
 	}
 
 	@Test
 	void testConversion_Infinite_Throws() {
-		assertThrows(IllegalArgumentException.class, () -> Length.convert(Double.POSITIVE_INFINITY, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
-		assertThrows(IllegalArgumentException.class, () -> Length.convert(Double.NEGATIVE_INFINITY, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
+		assertThrows(IllegalArgumentException.class,
+				() -> Length.convert(Double.POSITIVE_INFINITY, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
+		assertThrows(IllegalArgumentException.class,
+				() -> Length.convert(Double.NEGATIVE_INFINITY, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
 	}
+
+	// UC6 --- unit addition tests
+	@Test
+	void testAddition_SameUnit_FeetPlusFeet() {
+		Length result = new Length(1.0, Length.LengthUnit.FEET).add(new Length(2.0, Length.LengthUnit.FEET));
+		assertEquals(new Length(3.0, Length.LengthUnit.FEET), result);
+	}
+
+	@Test
+	void testAddition_SameUnit_InchPlusInch() {
+		Length result = new Length(6.0, Length.LengthUnit.INCHES).add(new Length(6.0, Length.LengthUnit.INCHES));
+
+		assertEquals(new Length(12.0, Length.LengthUnit.INCHES), result);
+	}
+
+	@Test
+	void testAddition_CrossUnit_FeetPlusInches() {
+		Length result = new Length(1.0, Length.LengthUnit.FEET).add(new Length(12.0, Length.LengthUnit.INCHES));
+		assertEquals(new Length(2.0, Length.LengthUnit.FEET), result);
+	}
+
+	@Test
+	void testAddition_CrossUnit_InchPlusFeet() {
+		Length result = new Length(12.0, Length.LengthUnit.INCHES).add(new Length(1.0, Length.LengthUnit.FEET));
+		assertEquals(new Length(24.0, Length.LengthUnit.INCHES), result);
+	}
+
+	@Test
+	void testAddition_CrossUnit_YardPlusFeet() {
+		Length result = new Length(1.0, Length.LengthUnit.YARDS).add(new Length(3.0, Length.LengthUnit.FEET));
+		assertEquals(new Length(2.0, Length.LengthUnit.YARDS), result);
+	}
+
+	@Test
+	void testAddition_CrossUnit_CentimeterPlusInch() {
+		Length result = new Length(2.54, Length.LengthUnit.CENTIMETERS).add(new Length(1.0, Length.LengthUnit.INCHES));
+		assertEquals(5.08, result.getValue(), EPSILON);
+		assertEquals(Length.LengthUnit.CENTIMETERS, result.getUnit());
+	}
+
+	// commutativity
+	@Test
+	void testAddition_Commutativity() {
+		Length a = new Length(1.0, Length.LengthUnit.FEET);
+		Length b = new Length(12.0, Length.LengthUnit.INCHES);
+
+		Length result1 = a.add(b);
+		Length result2 = b.add(a);
+		assertEquals(result1.convertTo(Length.LengthUnit.INCHES), result2.convertTo(Length.LengthUnit.INCHES));
+	}
+
+	// identity
+	@Test
+	void testAddition_WithZero() {
+		Length result = new Length(5.0, Length.LengthUnit.FEET).add(new Length(0.0, Length.LengthUnit.INCHES));
+		assertEquals(new Length(5.0, Length.LengthUnit.FEET), result);
+	}
+
+	// null handling
+	@Test
+	void testAddition_NullSecondOperand() {
+		Length first = new Length(1.0, Length.LengthUnit.FEET);
+		assertThrows(IllegalArgumentException.class, () -> first.add(null));
+	}
+
+	// large and small value
+	@Test
+	void testAddition_LargeValues() {
+		Length result = new Length(1e6, Length.LengthUnit.FEET).add(new Length(1e6, Length.LengthUnit.FEET));
+		assertEquals(new Length(2e6, Length.LengthUnit.FEET), result);
+	}
+
+	@Test
+	void testAddition_SmallValues() {
+		Length result = new Length(0.001, Length.LengthUnit.FEET).add(new Length(0.002, Length.LengthUnit.FEET));
+		assertEquals(0.003, result.getValue(), EPSILON);
+	}
+
 }

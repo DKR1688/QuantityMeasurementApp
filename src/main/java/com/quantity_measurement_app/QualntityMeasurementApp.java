@@ -86,6 +86,7 @@ public class QualntityMeasurementApp {
 		System.out.println();
 	}
 
+	// UC3 ---
 	public static void demonstrateFeetInchesComparison(double v1, double v2) {
 		Length f = new Length(v1, Length.LengthUnit.FEET);
 		Length l = new Length(v2, Length.LengthUnit.INCHES);
@@ -125,6 +126,16 @@ public class QualntityMeasurementApp {
 		System.out.println();
 	}
 
+	// UC6 ---
+	public static void demonstrateAddition(Length l1, Length l2) {
+
+		Length result = l1.add(l2);
+
+		System.out.println("Input: add(" + l1 + ", " + l2 + ")");
+		System.out.println("Output: " + result);
+		System.out.println();
+	}
+
 	public static void main(String[] args) {
 		// examples
 		demonstrateFeetEquality(1.0, 1.0);
@@ -149,5 +160,13 @@ public class QualntityMeasurementApp {
 
 		Length yard = new Length(1.0, Length.LengthUnit.YARDS);
 		demonstrateLengthConversion(yard, Length.LengthUnit.INCHES);
+
+		// UC6 ---
+		demonstrateAddition(new Length(1.0, Length.LengthUnit.FEET), new Length(2.0, Length.LengthUnit.FEET));
+		demonstrateAddition(new Length(1.0, Length.LengthUnit.FEET), new Length(12.0, Length.LengthUnit.INCHES));
+		demonstrateAddition(new Length(12.0, Length.LengthUnit.INCHES), new Length(1.0, Length.LengthUnit.FEET));
+		demonstrateAddition(new Length(36.0, Length.LengthUnit.INCHES), new Length(1.0, Length.LengthUnit.YARDS));
+		demonstrateAddition(new Length(2.54, Length.LengthUnit.CENTIMETERS), new Length(1.0, Length.LengthUnit.INCHES));
+		demonstrateAddition(new Length(5.0, Length.LengthUnit.FEET), new Length(-2.0, Length.LengthUnit.FEET));
 	}
 }
