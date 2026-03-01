@@ -2,7 +2,10 @@ package com.quantity_measurement_app;
 
 // enum representing weight units.
 // base unit is GRAM
-public enum WeightUnit {
+
+// UC10 ---
+// Implements IMeasurable to enable generic processing within Quantity<U>.
+public enum WeightUnit implements IMeasurable{
 	MILLIGRAM(0.001), 
 	GRAM(1.0), 
 	KILOGRAM(1000.0), 
@@ -15,23 +18,24 @@ public enum WeightUnit {
 	WeightUnit(double conversionFactorToGram) {
 		this.conversionFactorToGram = conversionFactorToGram;
 	}
+	
+	@Override
+    public double getConversionFactor() {
+        return conversionFactorToGram;
+    }
 
+	@Override
 	public double convertToBaseUnit(double value) {
-		return round(value * conversionFactorToGram);
+		return value * conversionFactorToGram;
 	}
 
+	@Override
 	public double convertFromBaseUnit(double baseValue) {
-		return round(baseValue / conversionFactorToGram);
+		return baseValue / conversionFactorToGram;
 	}
-
-	// converting value from one unit to another
-	public static double convert(double value, WeightUnit from, WeightUnit to) {
-		double baseValue = from.convertToBaseUnit(value);
-		return to.convertFromBaseUnit(baseValue);
-	}
-
-	// rounding to 2 decimal places
-	private static double round(double value) {
-		return Math.round(value * 100.0) / 100.0;
-	}
+	
+	@Override
+    public String getUnitName() {
+        return this.name();
+    }
 }

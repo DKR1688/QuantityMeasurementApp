@@ -1,8 +1,11 @@
 package com.quantity_measurement_app;
 
 //UC8 --- standalone enum for conversion
-//enum defining length units and conversion factor
-public enum LengthUnit {
+
+// UC10 ---
+// this enum implements IMeasurable to allow generic handling within Quantity<U>.
+// it encapsulate conversion logic
+public enum LengthUnit implements IMeasurable {
 	INCHES(1.0), // Base unit
 	FEET(12.0), // 1 foot = 12 inches
 	YARDS(36.0), // 1 yard = 36 inches
@@ -14,11 +17,13 @@ public enum LengthUnit {
 		this.conversionFactor = conversionFactor;
 	}
 
+	@Override
 	public double getConversionFactor() {
 		return conversionFactor;
 	}
 
 	// it convert value this to base unit
+	@Override
 	public double convertToBaseUnit(double value) {
 		if (!Double.isFinite(value)) {
 			throw new IllegalArgumentException("Value must be finite");
@@ -27,6 +32,7 @@ public enum LengthUnit {
 	}
 
 	// it convert value from base to this unit
+	@Override
 	public double convertFromBaseUnit(double baseValue) {
 		if (!Double.isFinite(baseValue)) {
 			throw new IllegalArgumentException("Base value must be finite");
@@ -34,4 +40,8 @@ public enum LengthUnit {
 		return baseValue / conversionFactor;
 	}
 
+	@Override
+	public String getUnitName() {
+		return this.name();
+	}
 }
