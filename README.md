@@ -33,4 +33,8 @@ QuantityMeasurementApp/
 
 > **🗓️ 26-February-2026 :-** Solved and submitted UC6 to unit addition feature [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC6-UnitAddition/src), UC7 to target unit addition feature [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC7-TargetUnitAddition/src) and UC8 to standalone length unit enum by loose coupling completed [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC8-StandaloneUnit/src);
 
-> **🗓️ 27-February-2026 :-** 
+> **🗓️ 27-February-2026 :-** Solved and submitted UC9 weight measurement equality, conversion and addition [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC9-Weight-Measurement/src?authuser=0);
+
+> **🗓️ 01-March-2026 :-** Solved and submitted UC10 generic quantity class with unit interface for multi category support and to remove duplication [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC10-Generic-Quantity-Class-with-Unit-Interface-For-Multi-Category-Support/src?authuser=0); Solved and submitted volume measurement equality, conversion and addition in litre, millilitre and gallon  [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC11-Volume-Measurement/src?authuser=0);
+
+> **🗓️ 02-March-2026 :-** 
