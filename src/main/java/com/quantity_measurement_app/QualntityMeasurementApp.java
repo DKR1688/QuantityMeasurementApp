@@ -1,7 +1,6 @@
 package com.quantity_measurement_app;
 
 public class QualntityMeasurementApp {
-
 //	//UC1 - feet measurement equality
 //	//inner class representing Feet measurement
 //	public static class Feet {
@@ -139,6 +138,40 @@ public class QualntityMeasurementApp {
 		System.out.println("Output: " + result);
 		System.out.println();
 	}
+	
+	
+	//UC9 ---
+		// weight demonstration methods
+		public static boolean demonstrateWeightEquality(Weight weight1, Weight weight2) {
+			return weight1.equals(weight2);
+		}
+
+		public static boolean demonstrateWeightComparison(double value1, WeightUnit unit1, double value2,
+				WeightUnit unit2) {
+			Weight w1 = new Weight(value1, unit1);
+			Weight w2 = new Weight(value2, unit2);
+			return w1.equals(w2);
+		}
+
+		public static Weight demonstrateWeightConversion(double value, WeightUnit fromUnit, WeightUnit toUnit) {
+			Weight weight = new Weight(value, fromUnit);
+			return weight.convertTo(toUnit);
+		}
+
+		// method overloading
+		public static Weight demonstrateWeightConversion(Weight weight, WeightUnit toUnit) {
+			return weight.convertTo(toUnit);
+		}
+
+		public static Weight demonstrateWeightAddition(Weight weight1, Weight weight2) {
+			return weight1.add(weight2);
+		}
+
+		// overloaded version with target unit
+		public static Weight demonstrateWeightAddition(Weight weight1, Weight weight2, WeightUnit targetUnit) {
+			return weight1.add(weight2, targetUnit);
+		}
+		
 
 	public static void main(String[] args) {
 		// examples
@@ -180,5 +213,21 @@ public class QualntityMeasurementApp {
 		demonstrateAdditionWithTarget(new Length(2.54, LengthUnit.CENTIMETERS), new Length(1.0, LengthUnit.INCHES),	LengthUnit.CENTIMETERS);
 		demonstrateAdditionWithTarget(new Length(5.0, LengthUnit.FEET), new Length(-2.0, LengthUnit.FEET), LengthUnit.INCHES);
 
+		
+		// UC9 ---
+		Weight w1 = new Weight(1.0, WeightUnit.KILOGRAM);
+		Weight w2 = new Weight(1000.0, WeightUnit.GRAM);
+
+		System.out.println("Equality:");
+		System.out.println(demonstrateWeightEquality(w1, w2));
+
+		System.out.println("\nConversion:");
+		System.out.println(demonstrateWeightConversion(w1, WeightUnit.GRAM));
+
+		System.out.println("\nAddition (implicit):");
+		System.out.println(demonstrateWeightAddition(w1, w2));
+
+		System.out.println("\nAddition (explicit - in GRAM):");
+		System.out.println(demonstrateWeightAddition(w1, w2, WeightUnit.GRAM));
 	}
 }
