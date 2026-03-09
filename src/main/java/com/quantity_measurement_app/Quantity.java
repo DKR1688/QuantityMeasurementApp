@@ -82,6 +82,10 @@ public final class Quantity<U extends IMeasurable> {
 		if (targetUnitRequired && targetUnit == null) {
 			throw new IllegalArgumentException("Target unit cannot be null");
 		}
+
+		// UC14 to new validation
+		this.unit.validateOperationSupport("arithmetic");
+		other.unit.validateOperationSupport("arithmetic");
 	}
 
 	// it is base arithmetic engine
@@ -109,9 +113,7 @@ public final class Quantity<U extends IMeasurable> {
 	}
 
 	public Quantity<U> add(Quantity<U> other, U targetUnit) {
-//        Objects.requireNonNull(other, "Other quantity cannot be null");
-//        Objects.requireNonNull(targetUnit, "Target unit cannot be null");
-		performBaseArithmetic(other, ArithmeticOperation.ADD);
+		validateArithmeticOperands(other, targetUnit, true);
 
 		double sumBase = performBaseArithmetic(other, ArithmeticOperation.ADD);
 		double finalValue = targetUnit.convertFromBaseUnit(sumBase);

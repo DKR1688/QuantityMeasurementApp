@@ -8,4 +8,19 @@ public interface IMeasurable {
 	double convertToBaseUnit(double value);
 	double convertFromBaseUnit(double baseValue);
 	String getUnitName();
+	
+	// UC14 ---
+	// by default all units support arithmetic
+    default boolean supportsArithmetic() {
+        return true;
+    }
+
+    // validation hook
+    default void validateOperationSupport(String operation) {
+        if (!supportsArithmetic()) {
+            throw new UnsupportedOperationException(
+                getUnitName() + " does not support " + operation
+            );
+        }
+    }
 }

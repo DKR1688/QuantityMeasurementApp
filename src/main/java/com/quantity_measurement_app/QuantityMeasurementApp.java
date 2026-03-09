@@ -71,6 +71,28 @@ public class QuantityMeasurementApp {
 		System.out.println("Result: " + q1.divide(q2));
 		System.out.println();
 	}
+	
+	private static void demonstrateTemperature() {
+		Quantity<TemperatureUnit> t1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+		Quantity<TemperatureUnit> t2 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+		Quantity<TemperatureUnit> t3 = new Quantity<>(273.15, TemperatureUnit.KELVIN);
+
+		// equality
+		demonstrateEquality(t1, t2);
+
+		// conversion
+		demonstrateConversion(t1, TemperatureUnit.FAHRENHEIT);
+		demonstrateConversion(t2, TemperatureUnit.CELSIUS);
+		demonstrateConversion(t3, TemperatureUnit.CELSIUS);
+
+		// arithmetic (should fail)
+		try {
+			demonstrateAddition(t1, t2, TemperatureUnit.CELSIUS);
+		} catch (UnsupportedOperationException e) {
+			System.out.println("Expected Error: " + e.getMessage());
+			System.out.println();
+		}
+	}
 
 	public static void main(String[] args) {
 		demonstrateLength();
@@ -120,5 +142,7 @@ public class QuantityMeasurementApp {
 		Quantity<VolumeUnit> v22 = new Quantity<>(10.0, VolumeUnit.LITRE);
 		demonstrateDivision(v11, v22);
 
+		// UC14 ---
+		demonstrateTemperature();
 	}
 }
