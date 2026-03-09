@@ -37,4 +37,13 @@ QuantityMeasurementApp/
 
 > **🗓️ 01-March-2026 :-** Solved and submitted UC10 generic quantity class with unit interface for multi category support and to remove duplication [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC10-Generic-Quantity-Class-with-Unit-Interface-For-Multi-Category-Support/src?authuser=0); Solved and submitted volume measurement equality, conversion and addition in litre, millilitre and gallon  [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC11-Volume-Measurement/src?authuser=0);
 
-> **🗓️ 02-March-2026 :-** 
+> **🗓️ 02-March-2026 :-** Solved and submitted UC11 to volume measurement, equality, conversion and addition [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC11-Volume-Measurement/src); Solved and submitted UC12 to subtraction division operation [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC12-Subtraction-and-Division-Operations-on-Quantity-Measurements/src); 
+
+
+## 🚀 Week 03
+> **🗓️ 06-March-2026 :-** Solved and submitted UC13 by refactoring UC12 to centralized arithmetic operation to DRY principle [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC13-Centralized-Arithmetic-Logic-to-Enforce-DRY-in-Quantity-Operations/src);
+
+> **🗓️ 10-March-2026 :-** Solved and submitted UC14 to temperature measurement 
+with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC14-TemperaturE-Measurement-with-Selective-Arithmetic-Support-and-Measurable-Refactoring/src);
+
+> **🗓️ 11-March-2026 :-** 
