@@ -46,4 +46,9 @@ QuantityMeasurementApp/
 > **🗓️ 10-March-2026 :-** Solved and submitted UC14 to temperature measurement 
 with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC14-TemperaturE-Measurement-with-Selective-Arithmetic-Support-and-Measurable-Refactoring/src);
 
-> **🗓️ 11-March-2026 :-** 
+> **🗓️ 12-March-2026 :-** Solved and pushed UC15 to provide N-tier architecture [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC15-N-Tier/src); Solved use case of address book project;
+
+> **🗓️ 13-March-2026 :-** Solved and pushed UC16 to Database Integration with JDBC for Quantity Measurement Persistence [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC16-Database-Integration-with-JDBC-for-Quantity-Measurement-Persistence/src);
+
+> **🗓️ 14-March-2026 :-** 
+
