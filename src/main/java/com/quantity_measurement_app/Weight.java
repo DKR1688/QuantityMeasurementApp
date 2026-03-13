@@ -2,6 +2,8 @@ package com.quantity_measurement_app;
 
 import java.util.Objects;
 
+import com.quantity_measurement_app.units.WeightUnit;
+
 public final class Weight {
 	private static final double EPSILON = 1e-6;
 	private final double value;

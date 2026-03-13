@@ -1,4 +1,6 @@
-package com.quantity_measurement_app;
+package com.quantity_measurement_app.units;
+
+import com.quantity_measurement_app.IMeasurable;
 
 // UC11 --- Volume measurement units
 // base unit is LITRE

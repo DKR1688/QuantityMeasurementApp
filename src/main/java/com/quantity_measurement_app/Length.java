@@ -2,6 +2,8 @@ package com.quantity_measurement_app;
 
 import java.util.Objects;
 
+import com.quantity_measurement_app.units.LengthUnit;
+
 //this length class supports equality comparison and unit to unit conversion
 public class Length {
 	private final double value;

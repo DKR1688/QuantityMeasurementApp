@@ -23,4 +23,20 @@ public interface IMeasurable {
             );
         }
     }
+    
+	// UC15 as helper method
+	default String getMeasurementType() {
+		return this.getClass().getSimpleName();
+	}
+
+	static IMeasurable getUnitFromName(String name, Class<? extends Enum<?>> enumClass) {
+		for (Object constant : enumClass.getEnumConstants()) {
+			IMeasurable unit = (IMeasurable) constant;
+			if (unit.getUnitName().equalsIgnoreCase(name)) {
+				return unit;
+			}
+		}
+		throw new IllegalArgumentException("Invalid unit: " + name);
+	}
+	
 }
