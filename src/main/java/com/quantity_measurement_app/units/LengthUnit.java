@@ -1,7 +1,5 @@
 package com.quantity_measurement_app.units;
 
-import com.quantity_measurement_app.IMeasurable;
-
 //UC8 --- standalone enum for conversion
 
 // UC10 ---

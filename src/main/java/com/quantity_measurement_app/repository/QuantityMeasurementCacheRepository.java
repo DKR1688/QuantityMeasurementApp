@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class QuantityMeasurementCacheRepository implements IQuantityMeasurementRepository {
 	private static QuantityMeasurementCacheRepository instance;
+
 	private final List<QuantityMeasurementEntity> cache = new ArrayList<>();
 
 	private QuantityMeasurementCacheRepository() {
@@ -19,11 +20,13 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 
 	@Override
 	public void save(QuantityMeasurementEntity entity) {
-		cache.add(entity);
+		if (entity != null) {
+			cache.add(entity);
+		}
 	}
 
 	@Override
 	public List<QuantityMeasurementEntity> getAllMeasurements() {
-		return new ArrayList<>(cache);
+		return new ArrayList<>(cache); // safe copy
 	}
 }

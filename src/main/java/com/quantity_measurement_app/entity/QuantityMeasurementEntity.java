@@ -1,6 +1,7 @@
 package com.quantity_measurement_app.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 public class QuantityMeasurementEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String operation;
@@ -52,5 +53,24 @@ public class QuantityMeasurementEntity implements Serializable {
 		}
 		return "Operation: " + operation + " | Operand1: " + operand1 + " | Operand2: " + operand2 + " | Result: "
 				+ result;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(operation, operand1, operand2, result, error);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof QuantityMeasurementEntity other)) {
+			return false;
+		}
+
+		return Objects.equals(operation, other.operation) && Objects.equals(operand1, other.operand1)
+				&& Objects.equals(operand2, other.operand2) && Objects.equals(result, other.result)
+				&& Objects.equals(error, other.error);
 	}
 }

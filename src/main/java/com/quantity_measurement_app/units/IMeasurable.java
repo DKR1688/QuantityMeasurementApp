@@ -1,4 +1,4 @@
-package com.quantity_measurement_app;
+package com.quantity_measurement_app.units;
 
 // UC10 --- 
 // this interface defines a contract for all measurement unit categories

@@ -2,6 +2,8 @@ package com.quantity_measurement_app;
 
 import java.util.Objects;
 
+import com.quantity_measurement_app.units.IMeasurable;
+
 // UC10 ---
 // generic measurement container capable of handling multiple unit categories like Length, Weight without duplication.
 // this class replaces category-specific implementations from UC1–UC9
