@@ -1,28 +1,16 @@
 package com.quantity_measurement_app.util;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    private static HikariDataSource dataSource;
 
-    static {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(ApplicationConfig.getProperty("db.url"));
-        config.setUsername(ApplicationConfig.getProperty("db.username"));
-        config.setPassword(ApplicationConfig.getProperty("db.password"));
-        config.setDriverClassName(ApplicationConfig.getProperty("db.driver"));
-
-        dataSource = new HikariDataSource(config);
-    }
+    private static final String URL = "jdbc:mysql://localhost:3306/quantitydb";
+    private static final String USER = "root";
+    private static final String PASSWORD = "deepak@1234";
 
     public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
-
-    public static void close() {
-        dataSource.close();
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

@@ -1,81 +1,70 @@
 package com.quantity_measurement_app.repository;
 
 import com.quantity_measurement_app.entity.QuantityMeasurementEntity;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class QuantityMeasurementDatabaseRepository implements IQuantityMeasurementRepository {
-	private static final String JDBC_URL = "jdbc:h2:~/quantitydb";
-	private static final String USER = "sa";
-	private static final String PASSWORD = "";
 
-	public QuantityMeasurementDatabaseRepository() {
-		createTableIfNotExists();
-	}
+    private static final String URL = "jdbc:mysql://localhost:3306/quantitydb";
+    private static final String USER = "root";
+    private static final String PASSWORD = "deepak@1234";
 
-	private Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-	}
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
 
-	private void createTableIfNotExists() {
-		String sql = """
-				CREATE TABLE IF NOT EXISTS quantity_measurement_entity (
-				    id INT AUTO_INCREMENT PRIMARY KEY,
-				    operation VARCHAR(50),
-				    input1 VARCHAR(50),
-				    input2 VARCHAR(50),
-				    result VARCHAR(50)
-				)
-				""";
+    @Override
+    public void save(QuantityMeasurementEntity entity) {
 
-		try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+        String sql = "INSERT INTO quantity_measurement_entity(operation, operand1, operand2, result) VALUES (?, ?, ?, ?)";
 
-			stmt.execute(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+            ps.setString(1, entity.getOperation());
+            ps.setString(2, entity.getOperand1());
+            ps.setString(3, entity.getOperand2());
+            ps.setString(4, entity.getResult());
 
-	@Override
-	public void save(QuantityMeasurementEntity entity) {
+            ps.executeUpdate();
 
-		String sql = "INSERT INTO quantity_measurement_entity(operation,input1,input2,result) VALUES (?,?,?,?)";
+            System.out.println("Measurement saved successfully!");
 
-		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-			ps.setString(1, entity.getOperation());
-			ps.setString(2, entity.getOperand1());
-			ps.setString(3, entity.getOperand2());
-			ps.setString(4, entity.getResult());
+    @Override
+    public List<QuantityMeasurementEntity> getAllMeasurements() {
 
-			ps.executeUpdate();
+        List<QuantityMeasurementEntity> list = new ArrayList<>();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        String sql = "SELECT operation, operand1, operand2, result FROM quantity_measurement_entity";
 
-	@Override
-	public List<QuantityMeasurementEntity> getAllMeasurements() {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-		List<QuantityMeasurementEntity> list = new ArrayList<>();
+            while (rs.next()) {
 
-		String sql = "SELECT operation,input1,input2,result FROM quantity_measurement_entity";
+                QuantityMeasurementEntity entity = new QuantityMeasurementEntity(
+                        rs.getString("operation"),
+                        rs.getString("operand1"),
+                        rs.getString("operand2"),
+                        rs.getString("result")
+                );
 
-		try (Connection conn = getConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+                list.add(entity);
+            }
 
-			while (rs.next()) {
-				list.add(new QuantityMeasurementEntity(rs.getString("operation"), rs.getString("input1"),
-						rs.getString("input2"), rs.getString("result")));
-			}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return list;
-	}
+        return list;
+    }
 }

@@ -2,6 +2,7 @@ package com.quantity_measurement_app;
 
 import com.quantity_measurement_app.controller.QuantityMeasurementController;
 import com.quantity_measurement_app.repository.QuantityMeasurementCacheRepository;
+import com.quantity_measurement_app.repository.QuantityMeasurementDatabaseRepository;
 import com.quantity_measurement_app.service.IQuantityMeasurementService;
 import com.quantity_measurement_app.service.QuantityMeasurementServiceImpl;
 import com.quantity_measurement_app.dto.QuantityDTO;
@@ -102,7 +103,7 @@ public class QuantityMeasurementApp {
 
 	public static void main(String[] args) {
 	    // UC15 architecture initialization
-		var repository = QuantityMeasurementCacheRepository.getInstance();
+		var repository = new QuantityMeasurementDatabaseRepository();
 		IQuantityMeasurementService service = new QuantityMeasurementServiceImpl(repository);
 		QuantityMeasurementController controller = new QuantityMeasurementController(service);
 		
@@ -156,6 +157,9 @@ public class QuantityMeasurementApp {
 		QuantityDTO q1 = new QuantityDTO(5, "FEET", "LENGTH");
 		QuantityDTO q2 = new QuantityDTO(60, "INCH", "LENGTH");
 		controller.performComparison(q1, q2);
+		controller.performAddition(q1, q2);
+		controller.performSubtraction(q1, q2);
+		controller.performDivision(q1, q2);
 		
 	}
 }

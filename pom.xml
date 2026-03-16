@@ -28,11 +28,11 @@
 
 	<dependencies>
 
-		<!-- H2 Database -->
+		<!-- SQL Database -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2.version}</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
 		</dependency>
 
 		<!-- HikariCP Connection Pool -->
