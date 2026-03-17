@@ -1,24 +1,34 @@
 package com.quantity_measurement_app.dto;
 
+import jakarta.validation.constraints.*;
+
 public class QuantityDTO {
-	private double value;
+	@NotNull(message = "Value cannot be null")
+	@DecimalMin(value = "0.0", inclusive = false, message = "Value must be greater than 0")
+	private Double value;
+
+	@NotEmpty(message = "Unit cannot be empty")
+	@Size(min = 1, max = 50, message = "Unit name must be between 1 and 50 characters")
 	private String unit;
+
+	@NotEmpty(message = "Measurement type cannot be empty")
+	@Pattern(regexp = "LENGTHUNIT|WEIGHTUNIT|VOLUMEUNIT|TEMPERATUREUNIT", message = "Measurement type must be one of: LENGTHUNIT, WEIGHTUNIT, VOLUMEUNIT, TEMPERATUREUNIT")
 	private String measurementType;
 
 	public QuantityDTO() {
 	}
 
-	public QuantityDTO(double value, String unit, String measurementType) {
+	public QuantityDTO(Double value, String unit, String measurementType) {
 		this.value = value;
 		this.unit = unit;
 		this.measurementType = measurementType;
 	}
 
-	public double getValue() {
+	public Double getValue() {
 		return value;
 	}
 
-	public void setValue(double value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 
@@ -38,10 +48,11 @@ public class QuantityDTO {
 		this.measurementType = measurementType;
 	}
 
-	@Override
-	public String toString() {
-		return "QuantityDTO{" + "value=" + value + ", unit='" + unit + '\'' + ", measurementType='" + measurementType
-				+ '\'' + '}';
+	@AssertTrue(message = "Value must be a finite number")
+	public boolean isValidValue() {
+		if (value == null) {
+			return false;
+		}
+		return Double.isFinite(value);
 	}
-	
 }

@@ -1,14 +1,21 @@
 package com.quantity_measurement_app.service;
 
 import com.quantity_measurement_app.dto.QuantityDTO;
-import com.quantity_measurement_app.entity.QuantityMeasurementEntity;
+import com.quantity_measurement_app.dto.QuantityMeasurementDTO;
+import com.quantity_measurement_app.model.QuantityMeasurementEntity;
 import com.quantity_measurement_app.exception.QuantityMeasurementException;
-import com.quantity_measurement_app.repository.IQuantityMeasurementRepository;
-public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
-	private final IQuantityMeasurementRepository repository;
+import com.quantity_measurement_app.repository.QuantityMeasurementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-	//dependency injection in constructor
-	public QuantityMeasurementServiceImpl(IQuantityMeasurementRepository repository) {
+import java.util.List;
+
+@Service
+public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
+	private final QuantityMeasurementRepository repository;
+
+	@Autowired
+	public QuantityMeasurementServiceImpl(QuantityMeasurementRepository repository) {
 		this.repository = repository;
 	}
 
@@ -19,12 +26,16 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 	@Override
 	public QuantityDTO convert(QuantityDTO input, String targetUnit) {
 		try {
-			// placeholder conversion replace with UC1–UC14 conversion logic
+			// it replace with actual UC1-UC14 conversion logic
 			QuantityDTO result = new QuantityDTO(input.getValue(), targetUnit, input.getMeasurementType());
-			repository.save(
-					new QuantityMeasurementEntity("CONVERT", formatQuantity(input), null, formatQuantity(result)));
+
+			QuantityMeasurementEntity entity = new QuantityMeasurementEntity("CONVERT", formatQuantity(input), null,
+					formatQuantity(result));
+			repository.save(entity);
+
 			return result;
 		} catch (Exception e) {
+			// it save error to database
 			repository.save(new QuantityMeasurementEntity("CONVERT", e.getMessage()));
 			throw new QuantityMeasurementException("Conversion failed", e);
 		}
@@ -33,9 +44,11 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 	@Override
 	public boolean compare(QuantityDTO q1, QuantityDTO q2) {
 		try {
-			boolean result = q1.getValue() == q2.getValue();
+			boolean result = q1.getValue().equals(q2.getValue());
+
 			repository.save(new QuantityMeasurementEntity("COMPARE", formatQuantity(q1), formatQuantity(q2),
 					String.valueOf(result)));
+
 			return result;
 		} catch (Exception e) {
 			repository.save(new QuantityMeasurementEntity("COMPARE", e.getMessage()));
@@ -48,8 +61,10 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 		try {
 			double value = q1.getValue() + q2.getValue();
 			QuantityDTO result = new QuantityDTO(value, q1.getUnit(), q1.getMeasurementType());
+
 			repository.save(new QuantityMeasurementEntity("ADD", formatQuantity(q1), formatQuantity(q2),
 					formatQuantity(result)));
+
 			return result;
 		} catch (Exception e) {
 			repository.save(new QuantityMeasurementEntity("ADD", e.getMessage()));
@@ -62,8 +77,10 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 		try {
 			double value = q1.getValue() - q2.getValue();
 			QuantityDTO result = new QuantityDTO(value, q1.getUnit(), q1.getMeasurementType());
+
 			repository.save(new QuantityMeasurementEntity("SUBTRACT", formatQuantity(q1), formatQuantity(q2),
 					formatQuantity(result)));
+
 			return result;
 		} catch (Exception e) {
 			repository.save(new QuantityMeasurementEntity("SUBTRACT", e.getMessage()));
@@ -77,13 +94,31 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 			if (q2.getValue() == 0) {
 				throw new QuantityMeasurementException("Division by zero");
 			}
+
 			double result = q1.getValue() / q2.getValue();
+
 			repository.save(new QuantityMeasurementEntity("DIVIDE", formatQuantity(q1), formatQuantity(q2),
 					String.valueOf(result)));
+
 			return result;
 		} catch (Exception e) {
 			repository.save(new QuantityMeasurementEntity("DIVIDE", e.getMessage()));
 			throw new QuantityMeasurementException("Division failed", e);
 		}
+	}
+
+	public List<QuantityMeasurementDTO> getMeasurementsByOperation(String operation) {
+		List<QuantityMeasurementEntity> entities = repository.findByOperation(operation);
+		return QuantityMeasurementDTO.fromEntityList(entities);
+	}
+
+	public List<QuantityMeasurementDTO> getMeasurementsByType(String measurementType) {
+		List<QuantityMeasurementEntity> entities = repository.findByMeasurementType(measurementType);
+		return QuantityMeasurementDTO.fromEntityList(entities);
+	}
+
+	public List<QuantityMeasurementDTO> getAllMeasurements() {
+		List<QuantityMeasurementEntity> entities = repository.findAll();
+		return QuantityMeasurementDTO.fromEntityList(entities);
 	}
 }

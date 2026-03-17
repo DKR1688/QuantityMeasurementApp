@@ -22,5 +22,5 @@ public class QuantityModel<U extends IMeasurable> {
 	public String toString() {
 		return "QuantityModel{" + "value=" + value + ", unit=" + unit + '}';
 	}
-	
+
 }

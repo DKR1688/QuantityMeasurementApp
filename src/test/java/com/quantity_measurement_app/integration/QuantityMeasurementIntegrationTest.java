@@ -1,76 +1,176 @@
 package com.quantity_measurement_app.integration;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import com.quantity_measurement_app.controller.QuantityMeasurementController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quantity_measurement_app.dto.QuantityDTO;
-import com.quantity_measurement_app.repository.IQuantityMeasurementRepository;
-import com.quantity_measurement_app.repository.QuantityMeasurementCacheRepository;
-import com.quantity_measurement_app.service.QuantityMeasurementServiceImpl;
-public class QuantityMeasurementIntegrationTest {
-	private QuantityMeasurementController controller;
-	
-	// UC15----------------------------------------------------------------------------------
-	@Test
-	void testIntegration_EndToEnd_LengthAddition() {
-		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
-		QuantityMeasurementController controller = new QuantityMeasurementController(
-				new QuantityMeasurementServiceImpl(repo));
+import com.quantity_measurement_app.dto.QuantityInputDTO;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-		QuantityDTO q1 = new QuantityDTO(2, "FEET", "LENGTH");
-		QuantityDTO q2 = new QuantityDTO(3, "FEET", "LENGTH");
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-		assertDoesNotThrow(() -> controller.performAddition(q1, q2));
-	}
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+class QuantityMeasurementIntegrationTest {
 
-	@Test
-	void testLayerSeparation_ServiceIndependence() {
-		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
-		QuantityMeasurementServiceImpl service = new QuantityMeasurementServiceImpl(repo);
+	@Autowired
+	private MockMvc mockMvc;
 
-		assertNotNull(service);
-	}
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Test
-	void testLayerSeparation_ControllerIndependence() {
-		IQuantityMeasurementRepository repo = QuantityMeasurementCacheRepository.getInstance();
-		QuantityMeasurementController controller = new QuantityMeasurementController(
-				new QuantityMeasurementServiceImpl(repo));
-
-		assertNotNull(controller);
-	}
-	
-	// UC16------------------------------------------------------------------------------------
-	@BeforeEach
-	void setup() {
-		controller = new QuantityMeasurementController(
-				new QuantityMeasurementServiceImpl(QuantityMeasurementCacheRepository.getInstance()));
+	void testApplicationContextLoads() {
+		// this test simply ensures the application context loads without errors
+		// if it fails, check the Spring Boot auto-configuration
 	}
 
 	@Test
-	void testEndToEndAddition() {
-		controller.performAddition(new QuantityDTO(10, "METER", "LENGTH"), new QuantityDTO(20, "METER", "LENGTH"));
+	void testHealthEndpoint_Success() throws Exception {
+		mockMvc.perform(get("/api/v1/quantities/health")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status", equalTo("UP")))
+				.andExpect(jsonPath("$.message", containsString("running")));
 	}
 
 	@Test
-	void testEndToEndComparison() {
-		controller.performComparison(new QuantityDTO(5, "METER", "LENGTH"), new QuantityDTO(5, "METER", "LENGTH"));
+	void testIntegration_CompareQuantities() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("COMPARE")))
+				.andExpect(jsonPath("$.isEqual").isBoolean());
 	}
 
 	@Test
-	void testEndToEndSubtraction() {
-		controller.performSubtraction(new QuantityDTO(20, "METER", "LENGTH"), new QuantityDTO(10, "METER", "LENGTH"));
+	void testIntegration_ConvertQuantity() throws Exception {
+		QuantityDTO input = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+
+		mockMvc.perform(post("/api/v1/quantities/convert?targetUnit=INCHES").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("CONVERT")));
 	}
 
 	@Test
-	void testEndToEndDivision() {
-		controller.performDivision(new QuantityDTO(10, "METER", "LENGTH"), new QuantityDTO(2, "METER", "LENGTH"));
+	void testIntegration_AddQuantities() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(5.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(3.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/add").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("ADD")))
+				.andExpect(jsonPath("$.result.value").exists());
 	}
 
 	@Test
-	void testEndToEndConversion() {
-		controller.performConversion(new QuantityDTO(10, "METER", "LENGTH"), "CM");
+	void testIntegration_SubtractQuantities() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(5.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(2.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/subtract").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("SUBTRACT")));
 	}
-	
+
+	@Test
+	void testIntegration_DivideQuantities() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(2.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/divide").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("DIVIDE")))
+				.andExpect(jsonPath("$.result").exists());
+	}
+
+	@Test
+	void testIntegration_ValidationError_InvalidInput() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(null, "FEET", "LENGTHUNIT"); // Invalid: value is null
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.success", equalTo(false)));
+	}
+
+	@Test
+	void testIntegration_ValidationError_InvalidMeasurementType() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "INVALID_TYPE");
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void testIntegration_MultipleOperations() throws Exception {
+		// First operation: compare
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(12.0, "INCHES", "LENGTHUNIT");
+		QuantityInputDTO compareInput = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(compareInput))).andExpect(status().isOk());
+
+		// Second operation: add
+		QuantityDTO q3 = new QuantityDTO(5.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q4 = new QuantityDTO(3.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO addInput = new QuantityInputDTO(q3, q4);
+
+		mockMvc.perform(post("/api/v1/quantities/add").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(addInput))).andExpect(status().isOk());
+	}
+
+	@Test
+	void testH2ConsoleAccessible() throws Exception {
+		mockMvc.perform(get("/h2-console/")).andExpect(status().isOk());
+	}
+
+	@Test
+	void testIntegration_ErrorHandling_MissingRequestBody() throws Exception {
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void testIntegration_ErrorHandling_InvalidJSON() throws Exception {
+		mockMvc.perform(
+				post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON).content("{invalid json"))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void testIntegration_ResponseContentType() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+	}
+
+	@Test
+	void testIntegration_ErrorResponseStructure() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(-1.0, "FEET", "LENGTHUNIT"); // Invalid to negative value
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.success", equalTo(false))).andExpect(jsonPath("$.timestamp").exists());
+	}
 }
