@@ -50,5 +50,14 @@ with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurem
 
 > **🗓️ 13-March-2026 :-** Solved and pushed UC16 to Database Integration with JDBC for Quantity Measurement Persistence [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC16-Database-Integration-with-JDBC-for-Quantity-Measurement-Persistence/src);
 
-> **🗓️ 14-March-2026 :-** 
+> **🗓️ 14-March-2026 :-** Prepare and gave presentation about jUnit;
+
+
+## 🚀 Week 04
+> **🗓️ 16-March-2026 :-** Study documentation about Spring and Spring boot with dependency injection, Spring MVC annotations;
+
+> **🗓️ 17-March-2026 :-** Solved and submitted UC17 to spring backend for quantity measurement [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC17-Spring-Backend-for-Quantity-Measurement/src);
+
+> **🗓️ 18-March-2026 :-** Solved on M1 questions;
+
 
