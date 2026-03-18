@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,6 +30,31 @@ public class GlobalExceptionHandler {
 				.forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
 
 		response.put("fieldErrors", fieldErrors);
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<?> handleMissingRequestParameters(
+			org.springframework.web.bind.MissingServletRequestParameterException ex) {
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", false);
+		response.put("timestamp", LocalDateTime.now());
+		response.put("status", HttpStatus.BAD_REQUEST.value());
+		response.put("error", "Missing Request Parameter");
+		response.put("message", ex.getParameterName() + " is required");
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<?> handleArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", false);
+		response.put("timestamp", LocalDateTime.now());
+		response.put("status", HttpStatus.BAD_REQUEST.value());
+		response.put("error", "Invalid Parameter Type");
+		response.put("message", "Parameter " + ex.getName() + " is invalid");
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 

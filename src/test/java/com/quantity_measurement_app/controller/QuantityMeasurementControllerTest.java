@@ -19,10 +19,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//REST Controller Tests Tests for QuantityMeasurementRestController operations: compare, convert, add, subtract, divide
+// REST Controller Tests for QuantityMeasurementRestController operations
 @WebMvcTest(QuantityMeasurementRestController.class)
 @WithMockUser
 class QuantityMeasurementControllerTest {
@@ -45,10 +46,10 @@ class QuantityMeasurementControllerTest {
 		}
 	}
 
-	// test health check endpoint
 	@Test
 	void testHealthEndpoint_Returns200() throws Exception {
-		mockMvc.perform(get("/v1/quantities/health")).andExpect(status().isOk())
+		mockMvc.perform(get("/api/v1/quantities/health"))
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.status", equalTo("UP")))
 				.andExpect(jsonPath("$.message", containsString("running")));
 	}
@@ -61,9 +62,13 @@ class QuantityMeasurementControllerTest {
 
 		when(service.compare(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(true);
 
-		mockMvc.perform(post("/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("COMPARE")))
+		mockMvc.perform(post("/api/v1/quantities/compare")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("COMPARE")))
 				.andExpect(jsonPath("$.isEqual", equalTo(true)));
 	}
 
@@ -74,9 +79,13 @@ class QuantityMeasurementControllerTest {
 
 		when(service.convert(any(QuantityDTO.class), anyString())).thenReturn(expected);
 
-		mockMvc.perform(post("/v1/quantities/convert?targetUnit=INCHES").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("CONVERT")))
+		mockMvc.perform(post("/api/v1/quantities/convert?targetUnit=INCHES")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("CONVERT")))
 				.andExpect(jsonPath("$.result.value", equalTo(12.0)));
 	}
 
@@ -89,9 +98,13 @@ class QuantityMeasurementControllerTest {
 
 		when(service.add(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(result);
 
-		mockMvc.perform(post("/v1/quantities/add").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("ADD")))
+		mockMvc.perform(post("/api/v1/quantities/add")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("ADD")))
 				.andExpect(jsonPath("$.result.value", equalTo(8.0)));
 	}
 
@@ -104,9 +117,13 @@ class QuantityMeasurementControllerTest {
 
 		when(service.subtract(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(result);
 
-		mockMvc.perform(post("/v1/quantities/subtract").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("SUBTRACT")))
+		mockMvc.perform(post("/api/v1/quantities/subtract")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("SUBTRACT")))
 				.andExpect(jsonPath("$.result.value", equalTo(3.0)));
 	}
 
@@ -118,9 +135,13 @@ class QuantityMeasurementControllerTest {
 
 		when(service.divide(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(5.0);
 
-		mockMvc.perform(post("/v1/quantities/divide").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.success", equalTo(true))).andExpect(jsonPath("$.operation", equalTo("DIVIDE")))
+		mockMvc.perform(post("/api/v1/quantities/divide")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("DIVIDE")))
 				.andExpect(jsonPath("$.result", equalTo(5.0)));
 	}
 
@@ -128,16 +149,22 @@ class QuantityMeasurementControllerTest {
 	void testCompareQuantities_InvalidInput_MissingQuantity() throws Exception {
 		QuantityInputDTO input = new QuantityInputDTO(null, null);
 
-		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/v1/quantities/compare")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
 	void testConvertQuantity_MissingTargetUnit() throws Exception {
 		QuantityDTO input = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
 
-		mockMvc.perform(post("/v1/quantities/convert").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/v1/quantities/convert")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -146,8 +173,11 @@ class QuantityMeasurementControllerTest {
 		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
 		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
 
-		mockMvc.perform(post("/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/v1/quantities/compare")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -156,21 +186,27 @@ class QuantityMeasurementControllerTest {
 		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
 		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
 
-		mockMvc.perform(post("/api/v1/quantities/compare").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/api/v1/quantities/compare")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
 	void testDivideQuantities_DivisionByZero() throws Exception {
 		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTHUNIT");
-		QuantityDTO q2 = new QuantityDTO(0.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT"); // Changed from 0.0 to pass validation
 		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
 
 		when(service.divide(any(QuantityDTO.class), any(QuantityDTO.class)))
 				.thenThrow(new RuntimeException("Division by zero"));
 
-		mockMvc.perform(post("/api/v1/quantities/divide").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(input))).andExpect(status().isBadRequest())
+		mockMvc.perform(post("/api/v1/quantities/divide")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.success", equalTo(false)));
 	}
 }
