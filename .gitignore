@@ -1,2 +1,8 @@
 /target/
 /bin/
+.mvn/
+.settings/
+.classpath
+.factorypath
+.gitignore
+.project
