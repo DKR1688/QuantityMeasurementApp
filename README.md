@@ -60,4 +60,8 @@ with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurem
 
 > **🗓️ 18-March-2026 :-** Solved on M1 questions;
 
+> **🗓️ 19-March-2026 :-** Preparing about spring frameworks and spring boot.
 
+> **🗓️ 26-March-2026 :-** Solved and submitted UC18 to google authentication spring security and user management [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC18-GoogleAuthentication_UserManagement);
+
+> 
