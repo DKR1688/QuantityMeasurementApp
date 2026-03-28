@@ -3,15 +3,20 @@ package com.quantity_measurement_app.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quantity_measurement_app.dto.QuantityDTO;
 import com.quantity_measurement_app.dto.QuantityInputDTO;
+import com.quantity_measurement_app.security.CustomUserDetailsService;
+import com.quantity_measurement_app.security.JwtFilter;
+import com.quantity_measurement_app.security.JwtUtil;
+import com.quantity_measurement_app.security.OAuth2SuccessHandler;
 import com.quantity_measurement_app.service.IQuantityMeasurementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.*;
@@ -23,9 +28,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// REST Controller Tests for QuantityMeasurementRestController operations
 @WebMvcTest(QuantityMeasurementRestController.class)
-@WithMockUser
+@AutoConfigureMockMvc(addFilters = false)
 class QuantityMeasurementControllerTest {
 
 	@Autowired
@@ -36,6 +40,18 @@ class QuantityMeasurementControllerTest {
 
 	@Autowired
 	private IQuantityMeasurementService service;
+
+	@MockBean
+	private JwtFilter jwtFilter;
+
+	@MockBean
+	private JwtUtil jwtUtil;
+
+	@MockBean
+	private CustomUserDetailsService customUserDetailsService;
+
+	@MockBean
+	private OAuth2SuccessHandler oAuth2SuccessHandler;
 
 	@TestConfiguration
 	static class TestConfig {
@@ -169,7 +185,7 @@ class QuantityMeasurementControllerTest {
 
 	@Test
 	void testEndpoint_ValidationError_InvalidQuantityValue() throws Exception {
-		QuantityDTO q1 = new QuantityDTO(0.0, "FEET", "LENGTHUNIT"); // Invalid: value must be > 0
+		QuantityDTO q1 = new QuantityDTO(0.0, "FEET", "LENGTHUNIT");
 		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
 		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
 
@@ -196,11 +212,11 @@ class QuantityMeasurementControllerTest {
 	@Test
 	void testDivideQuantities_DivisionByZero() throws Exception {
 		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTHUNIT");
-		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT"); // Changed from 0.0 to pass validation
+		QuantityDTO q2 = new QuantityDTO(1.0, "FEET", "LENGTHUNIT");
 		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
 
 		when(service.divide(any(QuantityDTO.class), any(QuantityDTO.class)))
-				.thenThrow(new RuntimeException("Division by zero"));
+				.thenThrow(new IllegalArgumentException("Division by zero"));
 
 		mockMvc.perform(post("/api/v1/quantities/divide")
 				.with(csrf())

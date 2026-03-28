@@ -3,15 +3,16 @@ package com.quantity_measurement_app.dto;
 import jakarta.validation.constraints.*;
 
 public class QuantityDTO {
-	@NotNull(message = "Value cannot be null")
+
+	@NotNull(message = "Value is required")
 	@DecimalMin(value = "0.0", inclusive = false, message = "Value must be greater than 0")
 	private Double value;
 
-	@NotEmpty(message = "Unit cannot be empty")
+	@NotBlank(message = "Unit is required")
 	@Size(min = 1, max = 50, message = "Unit name must be between 1 and 50 characters")
 	private String unit;
 
-	@NotEmpty(message = "Measurement type cannot be empty")
+	@NotBlank(message = "Measurement type is required")
 	@Pattern(regexp = "LENGTHUNIT|WEIGHTUNIT|VOLUMEUNIT|TEMPERATUREUNIT", message = "Measurement type must be one of: LENGTHUNIT, WEIGHTUNIT, VOLUMEUNIT, TEMPERATUREUNIT")
 	private String measurementType;
 
@@ -50,9 +51,12 @@ public class QuantityDTO {
 
 	@AssertTrue(message = "Value must be a finite number")
 	public boolean isValidValue() {
-		if (value == null) {
-			return false;
-		}
-		return Double.isFinite(value);
+		return value != null && Double.isFinite(value);
+	}
+
+	@Override
+	public String toString() {
+		return "QuantityDTO{" + "value=" + value + ", unit='" + unit + '\'' + ", measurementType='" + measurementType
+				+ '\'' + '}';
 	}
 }

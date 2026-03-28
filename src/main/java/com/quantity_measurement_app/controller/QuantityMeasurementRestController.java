@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,99 +27,58 @@ public class QuantityMeasurementRestController {
 	public ResponseEntity<?> convert(@Valid @RequestBody QuantityDTO input, @RequestParam String targetUnit) {
 		try {
 			QuantityDTO result = service.convert(input, targetUnit);
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", "CONVERT");
-			response.put("input", input);
-			response.put("targetUnit", targetUnit);
-			response.put("result", result);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(Map.of("success", true, "operation", "CONVERT", "input", input, "targetUnit",
+					targetUnit, "result", result));
 		} catch (Exception e) {
-			return handleException("Conversion", e);
+			return handleException("CONVERT", e);
 		}
 	}
 
 	@PostMapping("/compare")
 	public ResponseEntity<?> compare(@Valid @RequestBody QuantityInputDTO request) {
 		try {
-			if (request.getThisQuantityDTO() == null || request.getThatQuantityDTO() == null) {
-				return ResponseEntity.badRequest().body(
-						Map.of("success", false, "error", "Both thisQuantityDTO and thatQuantityDTO are required"));
-			}
-
+			validateRequest(request);
 			boolean result = service.compare(request.getThisQuantityDTO(), request.getThatQuantityDTO());
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", "COMPARE");
-			response.put("quantity1", request.getThisQuantityDTO());
-			response.put("quantity2", request.getThatQuantityDTO());
-			response.put("isEqual", result);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(Map.of("success", true, "operation", "COMPARE", "quantity1",
+					request.getThisQuantityDTO(), "quantity2", request.getThatQuantityDTO(), "isEqual", result));
 		} catch (Exception e) {
-			return handleException("Comparison", e);
+			return handleException("COMPARE", e);
 		}
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<?> add(@Valid @RequestBody QuantityInputDTO request) {
 		try {
-			if (request.getThisQuantityDTO() == null || request.getThatQuantityDTO() == null) {
-				return ResponseEntity.badRequest().body(
-						Map.of("success", false, "error", "Both thisQuantityDTO and thatQuantityDTO are required"));
-			}
-
+			validateRequest(request);
 			QuantityDTO result = service.add(request.getThisQuantityDTO(), request.getThatQuantityDTO());
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", "ADD");
-			response.put("quantity1", request.getThisQuantityDTO());
-			response.put("quantity2", request.getThatQuantityDTO());
-			response.put("result", result);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(Map.of("success", true, "operation", "ADD", "quantity1",
+					request.getThisQuantityDTO(), "quantity2", request.getThatQuantityDTO(), "result", result));
 		} catch (Exception e) {
-			return handleException("Addition", e);
+			return handleException("ADD", e);
 		}
 	}
 
 	@PostMapping("/subtract")
 	public ResponseEntity<?> subtract(@Valid @RequestBody QuantityInputDTO request) {
 		try {
-			if (request.getThisQuantityDTO() == null || request.getThatQuantityDTO() == null) {
-				return ResponseEntity.badRequest().body(
-						Map.of("success", false, "error", "Both thisQuantityDTO and thatQuantityDTO are required"));
-			}
-
+			validateRequest(request);
 			QuantityDTO result = service.subtract(request.getThisQuantityDTO(), request.getThatQuantityDTO());
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", "SUBTRACT");
-			response.put("quantity1", request.getThisQuantityDTO());
-			response.put("quantity2", request.getThatQuantityDTO());
-			response.put("result", result);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(Map.of("success", true, "operation", "SUBTRACT", "quantity1",
+					request.getThisQuantityDTO(), "quantity2", request.getThatQuantityDTO(), "result", result));
 		} catch (Exception e) {
-			return handleException("Subtraction", e);
+			return handleException("SUBTRACT", e);
 		}
 	}
 
 	@PostMapping("/divide")
 	public ResponseEntity<?> divide(@Valid @RequestBody QuantityInputDTO request) {
 		try {
-			if (request.getThisQuantityDTO() == null || request.getThatQuantityDTO() == null) {
-				return ResponseEntity.badRequest().body(
-						Map.of("success", false, "error", "Both thisQuantityDTO and thatQuantityDTO are required"));
-			}
-
+			validateRequest(request);
 			double result = service.divide(request.getThisQuantityDTO(), request.getThatQuantityDTO());
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", "DIVIDE");
-			response.put("quantity1", request.getThisQuantityDTO());
-			response.put("quantity2", request.getThatQuantityDTO());
-			response.put("result", result);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(Map.of("success", true, "operation", "DIVIDE", "quantity1",
+					request.getThisQuantityDTO(), "quantity2", request.getThatQuantityDTO(), "result", result));
 		} catch (Exception e) {
-			return handleException("Division", e);
+			return handleException("DIVIDE", e);
 		}
 	}
 
@@ -129,11 +87,16 @@ public class QuantityMeasurementRestController {
 		return ResponseEntity.ok(Map.of("status", "UP", "message", "Quantity Measurement Service is running"));
 	}
 
+	private void validateRequest(QuantityInputDTO request) {
+		if (request.getThisQuantityDTO() == null || request.getThatQuantityDTO() == null) {
+			throw new IllegalArgumentException("Both thisQuantityDTO and thatQuantityDTO are required");
+		}
+	}
+
 	private ResponseEntity<?> handleException(String operation, Exception e) {
-		Map<String, Object> errorResponse = new HashMap<>();
-		errorResponse.put("success", false);
-		errorResponse.put("operation", operation);
-		errorResponse.put("error", e.getMessage());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		HttpStatus status = (e instanceof IllegalArgumentException) ? HttpStatus.BAD_REQUEST
+				: HttpStatus.INTERNAL_SERVER_ERROR;
+		return ResponseEntity.status(status)
+				.body(Map.of("success", false, "operation", operation, "error", e.getMessage()));
 	}
 }

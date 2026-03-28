@@ -4,11 +4,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class QuantityInputDTO {
-	@NotNull(message = "First quantity (thisQuantityDTO) cannot be null")
+
+	@NotNull(message = "First quantity (thisQuantityDTO) is required")
 	@Valid
 	private QuantityDTO thisQuantityDTO;
 
-	@NotNull(message = "Second quantity (thatQuantityDTO) cannot be null")
+	@NotNull(message = "Second quantity (thatQuantityDTO) is required")
 	@Valid
 	private QuantityDTO thatQuantityDTO;
 
@@ -34,5 +35,11 @@ public class QuantityInputDTO {
 
 	public void setThatQuantityDTO(QuantityDTO thatQuantityDTO) {
 		this.thatQuantityDTO = thatQuantityDTO;
+	}
+
+	@Override
+	public String toString() {
+		return "QuantityInputDTO{" + "thisQuantityDTO=" + thisQuantityDTO + ", thatQuantityDTO=" + thatQuantityDTO
+				+ '}';
 	}
 }
