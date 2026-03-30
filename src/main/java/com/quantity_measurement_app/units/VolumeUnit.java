@@ -3,7 +3,7 @@ package com.quantity_measurement_app.units;
 // UC11 --- Volume measurement units
 // base unit is LITRE
 public enum VolumeUnit implements IMeasurable {
-	LITRE(1.0), // Base unit
+	LITRE(1.0), // base unit
 	MILLILITRE(0.001), // 1 mL = 0.001 L
 	GALLON(3.78541); // 1 US gallon ≈ 3.78541 L
 

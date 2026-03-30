@@ -26,7 +26,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 	@Override
 	public QuantityDTO convert(QuantityDTO input, String targetUnit) {
 		try {
-			// it replace with actual UC1-UC14 conversion logic
+			// it replace with actual conversion logic
 			QuantityDTO result = new QuantityDTO(input.getValue(), targetUnit, input.getMeasurementType());
 
 			QuantityMeasurementEntity entity = new QuantityMeasurementEntity("CONVERT", formatQuantity(input), null,

@@ -12,35 +12,32 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-	// Load secret from application.properties for flexibility
+	// it load secret from application.properties for flexibility
 	@Value("${jwt.secret}")
 	private String secret;
 
-	// Token validity: 24 hours
+	// here token validity is 24 hours
 	private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
 	private SecretKey getSigningKey() {
 		return Keys.hmacShaKeyFor(secret.getBytes());
 	}
 
-	// Generate token with claims (email + role)
+	// it generate token with claims of email and role
 	public String generateToken(String email, String role) {
 		return Jwts.builder().setSubject(email).addClaims(Map.of("role", role)).setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
 	}
 
-	// Extract email (subject)
 	public String extractEmail(String token) {
 		return getClaims(token).getSubject();
 	}
 
-	// Extract role claim
 	public String extractRole(String token) {
 		return (String) getClaims(token).get("role");
 	}
 
-	// Validate token
 	public boolean validateToken(String token, String email) {
 		try {
 			return email.equals(extractEmail(token)) && !isTokenExpired(token);

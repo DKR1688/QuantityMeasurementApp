@@ -35,8 +35,7 @@ public class SecurityConfig {
 	private final OAuth2FailureHandler failureHandler;
 	private final OAuth2AuthorizationRequestCookieRepository authorizationRequestRepository;
 
-	public SecurityConfig(JwtFilter jwtFilter, OAuth2SuccessHandler successHandler,
-			OAuth2FailureHandler failureHandler,
+	public SecurityConfig(JwtFilter jwtFilter, OAuth2SuccessHandler successHandler, OAuth2FailureHandler failureHandler,
 			OAuth2AuthorizationRequestCookieRepository authorizationRequestRepository) {
 		this.jwtFilter = jwtFilter;
 		this.successHandler = successHandler;
@@ -46,21 +45,21 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/oauth2/**", "/login/**")
 						.permitAll().requestMatchers("/api/v1/quantities/health").permitAll()
 						.requestMatchers("/api/v1/quantities/**").hasAnyRole("USER", "ADMIN")
 						.requestMatchers("/api/v1/measurements/**").hasRole("ADMIN").anyRequest().authenticated())
-				.oauth2Login(oauth -> oauth.authorizationEndpoint(auth -> auth
-						.authorizationRequestRepository(authorizationRequestRepository))
+				.oauth2Login(oauth -> oauth
+						.authorizationEndpoint(
+								auth -> auth.authorizationRequestRepository(authorizationRequestRepository))
 						.successHandler(successHandler).failureHandler(failureHandler))
 				.exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor((request, response, authException) -> {
 					response.setStatus(HttpStatus.UNAUTHORIZED.value());
 					response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 					response.getWriter().write("{\"success\":false,\"error\":\"Unauthorized\"}");
-				}, new AntPathRequestMatcher("/api/**")).defaultAccessDeniedHandlerFor((request, response,
-						accessDeniedException) -> {
+				}, new AntPathRequestMatcher("/api/**"))
+						.defaultAccessDeniedHandlerFor((request, response, accessDeniedException) -> {
 							response.setStatus(HttpStatus.FORBIDDEN.value());
 							response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 							response.getWriter().write("{\"success\":false,\"error\":\"Forbidden\"}");

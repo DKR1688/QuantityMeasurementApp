@@ -191,8 +191,7 @@ public class QuantityMeasurementDTO {
 		return entity;
 	}
 
-	// it convert list of QuantityMeasurementEntity to list of
-	// QuantityMeasurementDTO
+	// it convert list of QuantityMeasurementEntity to list of quantity measurement dto
 	public static List<QuantityMeasurementDTO> fromEntityList(List<QuantityMeasurementEntity> entities) {
 		if (entities == null) {
 			return List.of();
@@ -201,8 +200,7 @@ public class QuantityMeasurementDTO {
 		return entities.stream().map(QuantityMeasurementDTO::fromEntity).collect(Collectors.toList());
 	}
 
-	// it convert list of QuantityMeasurementDTO to list of
-	// QuantityMeasurementEntity
+	// it convert list of QuantityMeasurementDTO to list of quantity measurement entity
 	public static List<QuantityMeasurementEntity> toEntityList(List<QuantityMeasurementDTO> dtos) {
 		if (dtos == null) {
 			return List.of();

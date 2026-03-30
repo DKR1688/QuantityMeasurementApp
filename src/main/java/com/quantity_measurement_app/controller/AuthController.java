@@ -32,13 +32,13 @@ public class AuthController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	// 🔐 LOGIN
+	// api to user login
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user) {
 		try {
 			authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
-			// Include role in JWT claims
+			// it include role in JWT claims
 			User dbUser = userRepository.findByEmail(user.getEmail())
 					.orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
@@ -53,7 +53,7 @@ public class AuthController {
 		}
 	}
 
-	// 📝 REGISTER
+	// this is to register user
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody User user) {
 		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -61,7 +61,7 @@ public class AuthController {
 		}
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRole("ROLE_USER"); // ✅ Spring Security expects ROLE_ prefix
+		user.setRole("ROLE_USER"); //here spring security expects ROLE_ prefix
 		user.setProvider("LOCAL");
 
 		userRepository.save(user);
