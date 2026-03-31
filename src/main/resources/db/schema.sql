@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS quantity_measurements (
     result TEXT,
     error TEXT,
     measurement_type VARCHAR(50),
+    user_email VARCHAR(255),
     error_flag BIT(1) NOT NULL DEFAULT b'0',
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6)

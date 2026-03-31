@@ -5,9 +5,11 @@ package com.quantity_measurement_app.units;
 public enum VolumeUnit implements IMeasurable {
 	LITRE(1.0), // base unit
 	MILLILITRE(0.001), // 1 mL = 0.001 L
-	GALLON(3.78541); // 1 US gallon ≈ 3.78541 L
+	CUBIC_METRE(1000.0), // 1 cubic metre = 1000 L
+	GALLON(3.78541); // 1 US gallon = 3.78541 L
 
 	private final double conversionFactorToLitre;
+
 	VolumeUnit(double conversionFactorToLitre) {
 		this.conversionFactorToLitre = conversionFactorToLitre;
 	}

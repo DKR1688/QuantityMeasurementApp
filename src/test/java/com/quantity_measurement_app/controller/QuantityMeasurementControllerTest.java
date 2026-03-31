@@ -162,6 +162,25 @@ class QuantityMeasurementControllerTest {
 	}
 
 	@Test
+	void testMultiplyQuantities_Success() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(10.0, "FEET", "LENGTHUNIT");
+		QuantityDTO q2 = new QuantityDTO(2.0, "FEET", "LENGTHUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+		QuantityDTO result = new QuantityDTO(20.0, "FEET", "LENGTHUNIT");
+
+		when(service.multiply(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(result);
+
+		mockMvc.perform(post("/api/v1/quantities/multiply")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)))
+				.andExpect(jsonPath("$.operation", equalTo("MULTIPLY")))
+				.andExpect(jsonPath("$.result.value", equalTo(20.0)));
+	}
+
+	@Test
 	void testCompareQuantities_InvalidInput_MissingQuantity() throws Exception {
 		QuantityInputDTO input = new QuantityInputDTO(null, null);
 
@@ -194,6 +213,22 @@ class QuantityMeasurementControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(input)))
 				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void testEndpoint_Validation_AllowsTemperatureZeroAndNegative() throws Exception {
+		QuantityDTO q1 = new QuantityDTO(0.0, "CELSIUS", "TEMPERATUREUNIT");
+		QuantityDTO q2 = new QuantityDTO(-40.0, "FAHRENHEIT", "TEMPERATUREUNIT");
+		QuantityInputDTO input = new QuantityInputDTO(q1, q2);
+
+		when(service.compare(any(QuantityDTO.class), any(QuantityDTO.class))).thenReturn(false);
+
+		mockMvc.perform(post("/api/v1/quantities/compare")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(input)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", equalTo(true)));
 	}
 
 	@Test

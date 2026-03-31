@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 public class QuantityDTO {
 
 	@NotNull(message = "Value is required")
-	@DecimalMin(value = "0.0", inclusive = false, message = "Value must be greater than 0")
 	private Double value;
 
 	@NotBlank(message = "Unit is required")
@@ -52,6 +51,19 @@ public class QuantityDTO {
 	@AssertTrue(message = "Value must be a finite number")
 	public boolean isValidValue() {
 		return value != null && Double.isFinite(value);
+	}
+
+	@AssertTrue(message = "For length, weight, and volume, value must be greater than 0. Temperature allows zero or negative values.")
+	public boolean isValidRangeByMeasurementType() {
+		if (value == null || measurementType == null) {
+			return false;
+		}
+
+		if ("TEMPERATUREUNIT".equalsIgnoreCase(measurementType)) {
+			return true;
+		}
+
+		return value > 0;
 	}
 
 	@Override

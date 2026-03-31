@@ -7,9 +7,11 @@ package com.quantity_measurement_app.units;
 // it encapsulate conversion logic
 public enum LengthUnit implements IMeasurable {
 	INCHES(1.0), // Base unit
+	MILLIMETRE(0.0393701), // 1 mm = 0.0393701 inches
 	FEET(12.0), // 1 foot = 12 inches
 	YARDS(36.0), // 1 yard = 36 inches
-	CENTIMETERS(0.393701); // 1 cm = 0.393701 inches
+	CENTIMETERS(0.393701), // 1 cm = 0.393701 inches
+	METER(39.3701); // 1 meter = 39.3701 inches
 
 	private final double conversionFactor;
 

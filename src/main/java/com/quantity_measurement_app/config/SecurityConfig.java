@@ -49,7 +49,8 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/oauth2/**", "/login/**")
 						.permitAll().requestMatchers("/api/v1/quantities/health").permitAll()
 						.requestMatchers("/api/v1/quantities/**").hasAnyRole("USER", "ADMIN")
-						.requestMatchers("/api/v1/measurements/**").hasRole("ADMIN").anyRequest().authenticated())
+						.requestMatchers("/api/v1/measurements/**").hasAnyRole("USER", "ADMIN")
+						.anyRequest().authenticated())
 				.oauth2Login(oauth -> oauth
 						.authorizationEndpoint(
 								auth -> auth.authorizationRequestRepository(authorizationRequestRepository))

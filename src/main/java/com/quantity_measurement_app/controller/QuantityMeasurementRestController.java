@@ -82,6 +82,18 @@ public class QuantityMeasurementRestController {
 		}
 	}
 
+	@PostMapping("/multiply")
+	public ResponseEntity<?> multiply(@Valid @RequestBody QuantityInputDTO request) {
+		try {
+			validateRequest(request);
+			QuantityDTO result = service.multiply(request.getThisQuantityDTO(), request.getThatQuantityDTO());
+			return ResponseEntity.ok(Map.of("success", true, "operation", "MULTIPLY", "quantity1",
+					request.getThisQuantityDTO(), "quantity2", request.getThatQuantityDTO(), "result", result));
+		} catch (Exception e) {
+			return handleException("MULTIPLY", e);
+		}
+	}
+
 	@GetMapping("/health")
 	public ResponseEntity<?> health() {
 		return ResponseEntity.ok(Map.of("status", "UP", "message", "Quantity Measurement Service is running"));

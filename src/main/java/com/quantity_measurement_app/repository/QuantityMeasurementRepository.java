@@ -14,6 +14,9 @@ public interface QuantityMeasurementRepository extends JpaRepository<QuantityMea
 	//it find all measurements by operation type
 	List<QuantityMeasurementEntity> findByOperation(String operation);
 	List<QuantityMeasurementEntity> findByMeasurementType(String measurementType);
+	List<QuantityMeasurementEntity> findByUserEmail(String userEmail);
+	List<QuantityMeasurementEntity> findByOperationAndUserEmail(String operation, String userEmail);
+	List<QuantityMeasurementEntity> findByMeasurementTypeAndUserEmail(String measurementType, String userEmail);
 	List<QuantityMeasurementEntity> findByCreatedAtAfter(LocalDateTime date);
 	List<QuantityMeasurementEntity> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 

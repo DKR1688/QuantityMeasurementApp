@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "quantity_measurements", indexes = { @Index(name = "idx_operation", columnList = "operation"),
 		@Index(name = "idx_measurement_type", columnList = "measurement_type"),
+		@Index(name = "idx_user_email", columnList = "user_email"),
 		@Index(name = "idx_created_at", columnList = "created_at") })
 public class QuantityMeasurementEntity implements Serializable {
 
@@ -64,6 +65,9 @@ public class QuantityMeasurementEntity implements Serializable {
 
 	@Column(name = "measurement_type", nullable = true, length = 50)
 	private String measurementType;
+
+	@Column(name = "user_email", nullable = true, length = 255)
+	private String userEmail;
 
 	@Column(nullable = false)
 	private Boolean errorFlag = false;
@@ -156,6 +160,14 @@ public class QuantityMeasurementEntity implements Serializable {
 
 	public void setErrorFlag(Boolean errorFlag) {
 		this.errorFlag = errorFlag;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public LocalDateTime getCreatedAt() {
