@@ -4,7 +4,10 @@ import com.quantity_measurement_app.security.JwtFilter;
 import com.quantity_measurement_app.security.OAuth2AuthorizationRequestCookieRepository;
 import com.quantity_measurement_app.security.OAuth2FailureHandler;
 import com.quantity_measurement_app.security.OAuth2SuccessHandler;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -34,13 +37,16 @@ public class SecurityConfig {
 	private final OAuth2SuccessHandler successHandler;
 	private final OAuth2FailureHandler failureHandler;
 	private final OAuth2AuthorizationRequestCookieRepository authorizationRequestRepository;
+	private final String corsAllowedOrigins;
 
 	public SecurityConfig(JwtFilter jwtFilter, OAuth2SuccessHandler successHandler, OAuth2FailureHandler failureHandler,
-			OAuth2AuthorizationRequestCookieRepository authorizationRequestRepository) {
+			OAuth2AuthorizationRequestCookieRepository authorizationRequestRepository,
+			@Value("${app.cors.allowed-origins:http://localhost:3000}") String corsAllowedOrigins) {
 		this.jwtFilter = jwtFilter;
 		this.successHandler = successHandler;
 		this.failureHandler = failureHandler;
 		this.authorizationRequestRepository = authorizationRequestRepository;
+		this.corsAllowedOrigins = corsAllowedOrigins;
 	}
 
 	@Bean
@@ -93,7 +99,17 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("*"));
+		List<String> origins = Arrays.stream(corsAllowedOrigins.split(","))
+				.map(String::trim)
+				.filter(value -> !value.isBlank())
+				.collect(Collectors.toList());
+
+		if (origins.isEmpty()) {
+			config.setAllowedOrigins(List.of("http://localhost:3000"));
+		} else {
+			config.setAllowedOrigins(origins);
+		}
+
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(false);
