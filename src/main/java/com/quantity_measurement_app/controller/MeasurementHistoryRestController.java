@@ -4,6 +4,7 @@ import com.quantity_measurement_app.dto.QuantityMeasurementDTO;
 import com.quantity_measurement_app.service.IQuantityMeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,11 +27,7 @@ public class MeasurementHistoryRestController {
 	public ResponseEntity<?> getAllMeasurements() {
 		try {
 			List<QuantityMeasurementDTO> measurements = service.getAllMeasurements();
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("total", measurements.size());
-			response.put("measurements", measurements);
-			return ResponseEntity.ok(response);
+			return buildResponse(measurements);
 		} catch (Exception e) {
 			return handleException("Getting all measurements", e);
 		}
@@ -40,12 +37,7 @@ public class MeasurementHistoryRestController {
 	public ResponseEntity<?> getMeasurementsByOperation(@PathVariable String operation) {
 		try {
 			List<QuantityMeasurementDTO> measurements = service.getMeasurementsByOperation(operation);
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("operation", operation);
-			response.put("total", measurements.size());
-			response.put("measurements", measurements);
-			return ResponseEntity.ok(response);
+			return buildResponse(measurements);
 		} catch (Exception e) {
 			return handleException("Getting measurements by operation", e);
 		}
@@ -55,41 +47,78 @@ public class MeasurementHistoryRestController {
 	public ResponseEntity<?> getMeasurementsByType(@PathVariable String measurementType) {
 		try {
 			List<QuantityMeasurementDTO> measurements = service.getMeasurementsByType(measurementType);
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("measurementType", measurementType);
-			response.put("total", measurements.size());
-			response.put("measurements", measurements);
-			return ResponseEntity.ok(response);
+			return buildResponse(measurements);
 		} catch (Exception e) {
 			return handleException("Getting measurements by type", e);
 		}
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getMeasurementById(@PathVariable Long id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable Long id) {
 		try {
+			service.deleteById(id);
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("success", true);
-			response.put("message", "Measurement retrieval by ID endpoint - to be implemented");
+			response.put("message", "Deleted successfully");
+
 			return ResponseEntity.ok(response);
+
 		} catch (Exception e) {
-			return handleException("Getting measurement by ID", e);
+			return handleException("Deleting measurement", e);
 		}
 	}
 
-	@DeleteMapping("/clear")
-	public ResponseEntity<?> clearHistory() {
-		try {
-			Map<String, Object> response = new HashMap<>();
-			response.put("success", true);
-			response.put("message", "Clear history endpoint - to be implemented");
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			return handleException("Clearing history", e);
-		}
+//	@DeleteMapping
+//	public ResponseEntity<?> deleteAll(Authentication authentication) {
+//		try {
+//			String email = authentication.getName();
+//
+//			service.deleteAllByUserEmail(email);
+//
+//			Map<String, Object> response = new HashMap<>();
+//			response.put("success", true);
+//			response.put("message", "All history deleted");
+//
+//			return ResponseEntity.ok(response);
+//
+//		} catch (Exception e) {
+//			return handleException("Deleting all measurements", e);
+//		}
+//	}
+	
+	@DeleteMapping
+	public ResponseEntity<?> deleteAll(
+	        @RequestParam(required = false) String operation,
+	        @RequestParam(required = false) String measurementType,
+	        Authentication authentication) {
+
+	    try {
+	        String email = authentication.getName();
+
+	        service.deleteFiltered(email, operation, measurementType);
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("success", true);
+	        response.put("message", "Filtered history deleted");
+
+	        return ResponseEntity.ok(response);
+
+	    } catch (Exception e) {
+	        return handleException("Deleting filtered measurements", e);
+	    }
 	}
 
+	// COMMON RESPONSE BUILDER
+	private ResponseEntity<?> buildResponse(List<QuantityMeasurementDTO> measurements) {
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", true);
+		response.put("total", measurements.size());
+		response.put("measurements", measurements);
+		return ResponseEntity.ok(response);
+	}
+
+	// ERROR HANDLER
 	private ResponseEntity<?> handleException(String operation, Exception e) {
 		Map<String, Object> errorResponse = new HashMap<>();
 		errorResponse.put("success", false);

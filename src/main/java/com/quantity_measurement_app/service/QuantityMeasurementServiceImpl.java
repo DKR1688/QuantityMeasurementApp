@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
@@ -277,5 +278,54 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
 	private String sanitize(String unit) {
 		return unit == null ? "" : unit.trim().toUpperCase().replace('-', '_').replace(' ', '_');
+	}
+	
+	@Override
+	public void deleteById(Long id) {
+	    String email = resolveCurrentUserEmail();
+
+	    QuantityMeasurementEntity entity = repository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Record not found"));
+
+	    // SECURITY: user can delete only their own record
+	    if (!entity.getUserEmail().equals(email)) {
+	        throw new RuntimeException("Unauthorized delete attempt");
+	    }
+
+	    repository.delete(entity);
+	}
+
+	@Override
+	@Transactional
+	public void deleteAllByUserEmail(String email) {
+	    repository.deleteAllByUserEmail(email);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteFiltered(String email, String operation, String measurementType) {
+
+	    //both filters
+	    if (operation != null && !operation.isBlank() &&
+	        measurementType != null && !measurementType.isBlank()) {
+
+	        repository.deleteByUserEmailAndOperationAndMeasurementType(email, operation, measurementType);
+	        return;
+	    }
+
+	    //only operation
+	    if (operation != null && !operation.isBlank()) {
+	        repository.deleteByUserEmailAndOperation(email, operation);
+	        return;
+	    }
+
+	    //onty type
+	    if (measurementType != null && !measurementType.isBlank()) {
+	        repository.deleteByUserEmailAndMeasurementType(email, measurementType);
+	        return;
+	    }
+
+	    //when no filter delete all
+	    repository.deleteAllByUserEmail(email);
 	}
 }
