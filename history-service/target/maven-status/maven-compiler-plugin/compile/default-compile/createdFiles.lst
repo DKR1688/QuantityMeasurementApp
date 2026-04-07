@@ -1,0 +1,7 @@
+com\quantity_measurement_app\history\HistoryServiceApplication.class
+com\quantity_measurement_app\history\security\JwtUtil.class
+com\quantity_measurement_app\history\model\QuantityMeasurementEntity.class
+com\quantity_measurement_app\history\controller\HistoryController.class
+com\quantity_measurement_app\history\service\IHistoryService.class
+com\quantity_measurement_app\history\repository\QuantityMeasurementRepository.class
+com\quantity_measurement_app\history\service\HistoryServiceImpl.class
