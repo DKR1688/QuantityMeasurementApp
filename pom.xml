@@ -75,6 +75,7 @@
         <module>auth-service</module>
         <module>quantity-service</module>
         <module>history-service</module>
+        <module>practice</module>
     </modules>
 
 </project>
