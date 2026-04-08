@@ -94,3 +94,7 @@ node_modules/
 # Application properties (sensitive)
 application-prod.properties
 application-test.properties
+
+.factorypath
+.env
+.env.example
