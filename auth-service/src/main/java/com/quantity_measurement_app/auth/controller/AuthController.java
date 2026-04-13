@@ -4,9 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,15 +16,12 @@ import com.quantity_measurement_app.auth.security.JwtUtil;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-	private final AuthenticationManager authManager;
 	private final JwtUtil jwtUtil;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, UserRepository userRepository,
-			PasswordEncoder passwordEncoder) {
-		this.authManager = authManager;
+	public AuthController(JwtUtil jwtUtil, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.jwtUtil = jwtUtil;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -36,11 +31,17 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user) {
 		try {
-			authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-
-			// it include role in JWT claims
 			User dbUser = userRepository.findByEmail(user.getEmail())
 					.orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+
+			if (!"LOCAL".equalsIgnoreCase(dbUser.getProvider())) {
+				return ResponseEntity.status(400).body(Map.of("error", "This account uses Google login. Please continue with Google."));
+			}
+
+			if (dbUser.getPassword() == null || dbUser.getPassword().isBlank()
+					|| !passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
+				throw new BadCredentialsException("Invalid credentials");
+			}
 
 			String token = jwtUtil.generateToken(dbUser.getEmail(), dbUser.getRole());
 
