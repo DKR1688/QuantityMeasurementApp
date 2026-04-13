@@ -2,12 +2,14 @@ package com.quantity_measurement_app.auth.controller;
 
 import java.util.Map;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.quantity_measurement_app.auth.dto.AuthRequest;
 import com.quantity_measurement_app.auth.model.User;
 import com.quantity_measurement_app.auth.repository.UserRepository;
 import com.quantity_measurement_app.auth.security.JwtUtil;
@@ -29,9 +31,9 @@ public class AuthController {
 
 	// api to user login
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User user) {
+	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request) {
 		try {
-			User dbUser = userRepository.findByEmail(user.getEmail())
+			User dbUser = userRepository.findByEmail(request.getEmail().trim())
 					.orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
 			if (!"LOCAL".equalsIgnoreCase(dbUser.getProvider())) {
@@ -39,7 +41,7 @@ public class AuthController {
 			}
 
 			if (dbUser.getPassword() == null || dbUser.getPassword().isBlank()
-					|| !passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
+					|| !passwordEncoder.matches(request.getPassword(), dbUser.getPassword())) {
 				throw new BadCredentialsException("Invalid credentials");
 			}
 
@@ -56,12 +58,16 @@ public class AuthController {
 
 	// this is to register user
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody User user) {
-		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+	public ResponseEntity<?> register(@Valid @RequestBody AuthRequest request) {
+		String email = request.getEmail().trim();
+
+		if (userRepository.findByEmail(email).isPresent()) {
 			return ResponseEntity.badRequest().body(Map.of("error", "User already exists"));
 		}
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		User user = new User();
+		user.setEmail(email);
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setRole("ROLE_USER"); //here spring security expects ROLE_ prefix
 		user.setProvider("LOCAL");
 

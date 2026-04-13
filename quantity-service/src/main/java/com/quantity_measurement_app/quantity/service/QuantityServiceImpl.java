@@ -138,8 +138,8 @@ public class QuantityServiceImpl implements IQuantityService {
 	}
 
 	private void ensureArithmeticSupported(String measurementType) {
-		if ("TEMPERATUREUNIT".equals(measurementType)) {
-			throw new IllegalArgumentException("Temperature does not support arithmetic operations");
+		if (measurementType == null || measurementType.isBlank()) {
+			throw new IllegalArgumentException("Measurement type is required");
 		}
 	}
 
@@ -217,7 +217,7 @@ public class QuantityServiceImpl implements IQuantityService {
 	private void saveHistory(String operation, String measurementType, String operand1, String operand2, String result, String userEmail, String error) {
 		try {
 			// Call history service
-			String url = "http://history-service/api/v1/measurements/save";
+			String url = "http://HISTORY-SERVICE/api/v1/measurements/save";
 			Map<String, Object> historyData = new java.util.HashMap<>();
 			historyData.put("operation", operation);
 			historyData.put("measurementType", measurementType);
