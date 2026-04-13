@@ -77,7 +77,6 @@ Thumbs.db
 .env.local
 .env.production
 .env.example
-!deployment/**/*.env.example
 
 # Logs
 logs/

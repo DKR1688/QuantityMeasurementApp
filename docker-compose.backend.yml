@@ -20,7 +20,7 @@ services:
 
   eureka-server:
     build:
-      context: ../..
+      context: .
       dockerfile: eureka-server/Dockerfile
     image: ${QMA_EUREKA_IMAGE:-qma-eureka}
     container_name: qma-eureka-server
@@ -32,7 +32,7 @@ services:
 
   auth-service:
     build:
-      context: ../..
+      context: .
       dockerfile: auth-service/Dockerfile
     image: ${QMA_AUTH_IMAGE:-qma-auth}
     container_name: qma-auth-service
@@ -59,7 +59,7 @@ services:
 
   quantity-service:
     build:
-      context: ../..
+      context: .
       dockerfile: quantity-service/Dockerfile
     image: ${QMA_QUANTITY_IMAGE:-qma-quantity}
     container_name: qma-quantity-service
@@ -75,7 +75,7 @@ services:
 
   history-service:
     build:
-      context: ../..
+      context: .
       dockerfile: history-service/Dockerfile
     image: ${QMA_HISTORY_IMAGE:-qma-history}
     container_name: qma-history-service
@@ -96,7 +96,7 @@ services:
 
   api-gateway:
     build:
-      context: ../..
+      context: .
       dockerfile: api-gateway/Dockerfile
     image: ${QMA_GATEWAY_IMAGE:-qma-gateway}
     container_name: qma-api-gateway

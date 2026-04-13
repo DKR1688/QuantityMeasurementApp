@@ -21,7 +21,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 	private final String frontendUrl;
 
 	public OAuth2LoginSuccessHandler(UserRepository userRepository, JwtUtil jwtUtil,
-			@Value("${app.frontend.url:http://localhost:4200}") String frontendUrl) {
+			@Value("${app.frontend.url:http://localhost:3000}") String frontendUrl) {
 		this.userRepository = userRepository;
 		this.jwtUtil = jwtUtil;
 		this.frontendUrl = frontendUrl;

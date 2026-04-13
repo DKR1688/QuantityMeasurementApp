@@ -43,9 +43,8 @@ public enum TemperatureUnit implements IMeasurable {
 		return this.name();
 	}
 
-	// UC14 restriction
 	@Override
 	public boolean supportsArithmetic() {
-		return false;
+		return true;
 	}
 }

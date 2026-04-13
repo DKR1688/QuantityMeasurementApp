@@ -15,7 +15,7 @@ public class OAuth2LoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
 	private final String frontendUrl;
 
-	public OAuth2LoginFailureHandler(@Value("${app.frontend.url:http://localhost:4200}") String frontendUrl) {
+	public OAuth2LoginFailureHandler(@Value("${app.frontend.url:http://localhost:3000}") String frontendUrl) {
 		this.frontendUrl = frontendUrl;
 	}
 
