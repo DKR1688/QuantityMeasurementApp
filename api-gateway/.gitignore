@@ -99,5 +99,3 @@ application-prod.properties
 application-test.properties
 
 .factorypath
-.env
-.env.example
