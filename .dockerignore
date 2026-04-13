@@ -12,3 +12,16 @@
 deployment/backend/.env
 node_modules
 
+.m2
+.mvn
+.settings
+target
+node_modules
+*.log
+*.md
+.env
+.env.*
+!.env.example
+.classpath
+.factorypath
+.project
