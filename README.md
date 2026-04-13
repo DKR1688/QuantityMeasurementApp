@@ -43,8 +43,7 @@ QuantityMeasurementApp/
 ## 🚀 Week 03
 > **🗓️ 06-March-2026 :-** Solved and submitted UC13 by refactoring UC12 to centralized arithmetic operation to DRY principle [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC13-Centralized-Arithmetic-Logic-to-Enforce-DRY-in-Quantity-Operations/src);
 
-> **🗓️ 10-March-2026 :-** Solved and submitted UC14 to temperature measurement 
-with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC14-TemperaturE-Measurement-with-Selective-Arithmetic-Support-and-Measurable-Refactoring/src);
+> **🗓️ 10-March-2026 :-** Solved and submitted UC14 to temperature measurement with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC14-TemperaturE-Measurement-with-Selective-Arithmetic-Support-and-Measurable-Refactoring/src);
 
 > **🗓️ 12-March-2026 :-** Solved and pushed UC15 to provide N-tier architecture [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC15-N-Tier/src); Solved use case of address book project;
 
@@ -62,6 +61,34 @@ with arithmetic support [Click Here](https://github.com/DKR1688/QuantityMeasurem
 
 > **🗓️ 19-March-2026 :-** Preparing about spring frameworks and spring boot.
 
+
+## 🚀 Week 05 :- Frontend started with angular
 > **🗓️ 26-March-2026 :-** Solved and submitted UC18 to google authentication spring security and user management [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC18-GoogleAuthentication_UserManagement);
+
+> **🗓️ 27-March-2026 :-** Created a repository QuantityMeasurementApp-Frontend and Set up the Angular project structure, installed dependencies, and configured the base application shell;
+
+> **🗓️ 28-March-2026 :-** Implemented authentication page and login flow using Google OAuth; created auth.service.ts and initial auth components [Click Here](https://github.com/DKR1688/QuantityMeasurementApp-Frontend/tree/main);
+
+> **🗓️ 29-March-2026 :-** Built the dashboard page for measurement input and results display; connected frontend components to basic service interfaces;
+
+
+## 🚀 Week 06
+> **🗓️ 30-March-2026 :-** Added history page for previous measurements and implemented frontend routing with guards for authenticated access [Click Here](https://github.com/DKR1688/QuantityMeasurementApp-Frontend/tree/main);
+
+> **🗓️ 31-March-2026 :-** Integrated API service with backend endpoints; added HTTP interceptor for auth token handling and error feedback;
+
+> **🗓️ 01-April-2026 :-** Finalized layout and responsive design, validated frontend-backend interaction, and prepared the app for end-to-end testing [Click Here](https://github.com/DKR1688/QuantityMeasurementApp-Frontend/tree/main);
+
+> **🗓️ 02-April-2026 :-** Studied Render deployment documentation and Docker containerization; learned about production environment configuration;
+
+> **🗓️ 03-April-2026 :-** Deployed the frontend application on Render platform; configured environment variables, DNS setup, and tested live deployment with backend microservices [Click Here](https://quantitymeasurementapp-frontend-7v2x.onrender.com/);
+
+> **🗓️ 04-April-2026 :-** Solved and submitted UC21 with auth-service and quantity-service microservices in backend [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC21-Microservices_Architecture_for_QMA);
+
+
+## 🚀 Week 07
+> **🗓️ 06-April-2026 :-** Solved and submitted UC21 with history-service and eureka-server for service discovery [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC21-Microservices_Architecture_for_QMA);
+
+> **🗓️ 07-April-2026 :-** Solved and submitted UC21 integration of api-gateway and corrected interactions between microservices, frontend and backend [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC21-Microservices_Architecture_for_QMA);
 
 > 
