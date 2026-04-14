@@ -5,6 +5,7 @@ import com.quantity_measurement_app.quantity.units.LengthUnit;
 import com.quantity_measurement_app.quantity.units.TemperatureUnit;
 import com.quantity_measurement_app.quantity.units.VolumeUnit;
 import com.quantity_measurement_app.quantity.units.WeightUnit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,10 +16,14 @@ public class QuantityServiceImpl implements IQuantityService {
 	private static final double EPSILON = 1e-9;
 
 	private final RestTemplate restTemplate;
+	private final String historyServiceBaseUrl;
 
 	@Autowired
-	public QuantityServiceImpl(RestTemplate restTemplate) {
+	public QuantityServiceImpl(
+			RestTemplate restTemplate,
+			@Value("${app.history-service.url:http://localhost:8083}") String historyServiceBaseUrl) {
 		this.restTemplate = restTemplate;
+		this.historyServiceBaseUrl = historyServiceBaseUrl.replaceAll("/+$", "");
 	}
 
 	@Override
@@ -216,8 +221,7 @@ public class QuantityServiceImpl implements IQuantityService {
 
 	private void saveHistory(String operation, String measurementType, String operand1, String operand2, String result, String userEmail, String error) {
 		try {
-			// Call history service
-			String url = "http://HISTORY-SERVICE/api/v1/measurements/save";
+			String url = historyServiceBaseUrl + "/api/v1/measurements/save";
 			Map<String, Object> historyData = new java.util.HashMap<>();
 			historyData.put("operation", operation);
 			historyData.put("measurementType", measurementType);
