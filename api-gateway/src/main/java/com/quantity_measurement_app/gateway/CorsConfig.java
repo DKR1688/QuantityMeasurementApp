@@ -27,7 +27,11 @@ public class CorsConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowCredentials(true);
         for (String origin : allowedOrigins) {
-            corsConfig.addAllowedOrigin(origin);
+            if (origin.contains("*")) {
+                corsConfig.addAllowedOriginPattern(origin);
+            } else {
+                corsConfig.addAllowedOrigin(origin);
+            }
         }
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");

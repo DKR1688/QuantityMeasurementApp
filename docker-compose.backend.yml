@@ -40,10 +40,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      eureka-server:
-        condition: service_started
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+      EUREKA_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/authdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -64,12 +63,11 @@ services:
     image: ${QMA_QUANTITY_IMAGE:-qma-quantity}
     container_name: qma-quantity-service
     restart: unless-stopped
-    depends_on:
-      eureka-server:
-        condition: service_started
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+      EUREKA_CLIENT_ENABLED: "false"
       JWT_SECRET: ${JWT_SECRET}
+      APP_HISTORY_SERVICE_URL: http://history-service:8083
     networks:
       - qma-backend
 
@@ -83,10 +81,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      eureka-server:
-        condition: service_started
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+      EUREKA_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/historydb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -102,8 +99,6 @@ services:
     container_name: qma-api-gateway
     restart: unless-stopped
     depends_on:
-      eureka-server:
-        condition: service_started
       auth-service:
         condition: service_started
       quantity-service:
@@ -111,7 +106,11 @@ services:
       history-service:
         condition: service_started
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+      EUREKA_CLIENT_ENABLED: "false"
+      AUTH_SERVICE_URL: http://auth-service:8081
+      QUANTITY_SERVICE_URL: http://quantity-service:8082
+      HISTORY_SERVICE_URL: http://history-service:8083
       APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS}
     ports:
       - "${GATEWAY_PORT:-8080}:8080"
