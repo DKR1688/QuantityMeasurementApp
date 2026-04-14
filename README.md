@@ -91,4 +91,18 @@ QuantityMeasurementApp/
 
 > **🗓️ 07-April-2026 :-** Solved and submitted UC21 integration of api-gateway and corrected interactions between microservices, frontend and backend [Click Here](https://github.com/DKR1688/QuantityMeasurementApp/tree/feature/UC21-Microservices_Architecture_for_QMA);
 
-> 
+> **🗓️ 08-April-2026 :-** Started production database migration work for the microservices setup; prepared MySQL-based configuration and environment-variable support for auth-service and history-service [Click Here](https://github.com/DKR1688/QuantityMeasurementApp);
+
+> **🗓️ 09-April-2026 :-** Updated frontend runtime environment handling for deployment; added runtime API base URL configuration and Docker/Nginx support for frontend hosting [Click Here](https://github.com/DKR1688/QuantityMeasurementApp);
+
+> **🗓️ 10-April-2026 :-** Attended reassessment of M1; 
+
+
+> ## 🚀 Week 08
+> **🗓️ 13-April-2026 :-** Improved deployment readiness for backend and frontend using Docker-based setup; reviewed routing, service startup flow, and deployment configuration for cloud hosting [Click Here](https://github.com/DKR1688/QuantityMeasurementApp);
+
+> **🗓️ 14-April-2026 :-** Deployed backend and frontend services on Render platform; configured environment variables and verified service availability across gateway, auth, quantity, history, and frontend applications [Click Here](https://github.com/DKR1688/QuantityMeasurementApp); 
+
+> **🗓️ 15-April-2026 :-** Fixed Render deployment issues related to gateway routing, CORS, Google OAuth, and inter-service communication; verified backend and frontend build success after deployed [Click Here](https://github.com/DKR1688/QuantityMeasurementApp);
+
+>
